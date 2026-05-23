@@ -19,7 +19,7 @@ Your job is to look at the student's latest question and decide:
 
 **Aspect-specific questions unlock that aspect only.** "Where is the pain?" unlocks `pain_site` and nothing else. "Does it spread anywhere?" unlocks `pain_radiation` (a protected fact, because the question is specifically on-target).
 
-**Filler-only utterances unlock nothing.** "Okay", "mm-hm", "right", "I see", "go on", "uh-huh" - return `newly_earned: []` and `utterance_type: "filler_only"`.
+**Filler-only utterances unlock nothing.** Reserve `filler_only` for **short backchannels only** (roughly one to four words): "Okay", "Right", "Mm-hm", "I see", "Go on". Full-sentence reflections or empathy without a question use `conversational_ack` instead (see taxonomy).
 
 **Filler + question = treat as the question.** "Right, do you smoke?" → process the smoking question.
 
@@ -53,8 +53,9 @@ The available scope-sets:
 ## Utterance type taxonomy
 
 Choose one:
-- `filler_only` - acknowledgements with no question (okay, right, mm-hm, I see, go on)
-- `social_chat` - interpersonal check-in about the patient as a person (how are you doing, how are you feeling, how are you holding up, are you okay) - NOT a clinical question about the case
+- `filler_only` - short backchannels only (1-4 words): okay, right, mm-hm, I see, go on
+- `conversational_ack` - full-sentence statement (no question): reflects, summarises, empathises, or transitions; no fact unlock
+- `social_chat` - question checking in on the patient as a person (how are you doing, how are you feeling) - NOT a clinical question about the case
 - `broad_open` - open invitations like "tell me more", "describe it", "anything else"
 - `aspect_specific` - asks about a specific aspect (where is it, when did it start)
 - `specific_direct` - very targeted question that maps to a single fact (does it radiate to the arm)

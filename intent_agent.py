@@ -38,6 +38,31 @@ _ASSOC_STEER_PATTERNS = (
     r"\bbesides the pain\b",
 )
 
+_SHORT_FILLER_PHRASES = frozenset({
+    "ok", "okay", "k", "right", "yeah", "yep", "yup", "mm", "mm-hm", "mmhm", "mhm",
+    "uh-huh", "uh huh", "i see", "go on", "got it", "sure", "alright", "all right",
+    "fine", "thanks", "thank you", "cheers",
+})
+
+_CONVERSATIONAL_ACK_PATTERNS = (
+    r"\bso you('ve| have)\b",
+    r"\bso the (pain|problem)\b",
+    r"\bokay,? so you\b",
+    r"\bright,? so (the |you)",
+    r"\bthat must be\b",
+    r"\bthat sounds\b",
+    r"\bi understand\b",
+    r"\bi can see\b",
+    r"\blet me (just )?(summar|recap)\b",
+    r"\bwhat you('ve| have) (said|told|mentioned)\b",
+    r"\byou('ve| have) (said|told|mentioned)\b",
+    r"\bsounds like you\b",
+    r"\bthank you for (telling|sharing|explaining)\b",
+    r"\bi('m| am) sorry (to hear|about|that)\b",
+    r"\bwe('ll| will) (come back|move on|ask)\b",
+    r"\bi('d| would) like to ask\b",
+)
+
 _SPECIFIC_QUESTION_PATTERNS = (
     r"\bwhere\b.*\b(pain|hurt|ache)\b",
     r"\bwhen\b.*\b(start|begin|came on)\b",
@@ -173,6 +198,51 @@ class IntentAgent:
     def _is_assoc_steer(self, question: str) -> bool:
         return self._matches_any(_ASSOC_STEER_PATTERNS, question.lower().strip())
 
+    def _is_short_filler_only(self, question: str) -> bool:
+        q = question.strip().lower().rstrip(".!?")
+        if not q:
+            return True
+        if q in _SHORT_FILLER_PHRASES:
+            return True
+        words = q.split()
+        if len(words) <= 2 and all(w in _SHORT_FILLER_PHRASES for w in words):
+            return True
+        return len(words) <= 3 and q in _SHORT_FILLER_PHRASES
+
+    def _is_conversational_ack_statement(self, question: str) -> bool:
+        """Full-sentence reflections / empathy / transitions — not questions, not短 filler."""
+        text = question.strip()
+        if not text or "?" in text:
+            return False
+        if self._is_short_filler_only(text):
+            return False
+        lower = text.lower()
+        if re.match(
+            r"^(what|where|when|why|how|who|do|does|did|have|has|had|are|is|was|were|"
+            r"can|could|would|should|will|shall)\b",
+            lower,
+        ):
+            return False
+        if self._matches_any(_CONVERSATIONAL_ACK_PATTERNS, lower):
+            return True
+        return len(lower.split()) >= 6
+
+    def _apply_conversational_ack_override(
+        self, question: str, result: dict[str, Any]
+    ) -> dict[str, Any]:
+        if not self._is_conversational_ack_statement(question):
+            return result
+        utterance = result.get("utterance_type", "")
+        if utterance in ("filler_only", "unclear", "broad_open") and not result.get(
+            "newly_earned"
+        ):
+            result["utterance_type"] = "conversational_ack"
+            result["rationale"] = (
+                "Full-sentence statement (reflection/empathy/transition) — "
+                "no fact unlock; patient should give brief in-character ack."
+            )
+        return result
+
     def _next_incomplete_scope(
         self, already_earned: set[str]
     ) -> tuple[dict | None, list[str]]:
@@ -286,6 +356,7 @@ class IntentAgent:
         ]
 
         result = self._apply_broad_scope_override(question, already_earned, result)
+        result = self._apply_conversational_ack_override(question, result)
 
         result["newly_earned"] = [
             fid for fid in result.get("newly_earned", [])

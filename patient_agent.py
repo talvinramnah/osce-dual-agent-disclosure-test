@@ -67,10 +67,27 @@ class PatientAgent:
                     "Bad: re-listing pain details or saying \"like I said\" then repeating them."
                     "</response_instruction>\n"
                 )
-            elif utterance_type in ("filler_only", "social_chat"):
+            elif utterance_type == "conversational_ack":
+                response_instruction = (
+                    "<response_instruction>MANDATORY: No new facts. The student made a "
+                    "statement (reflection, empathy, or transition) — NOT a question. "
+                    "Reply in 1-2 short sentences. You MUST say something (not silence). "
+                    "You may confirm (\"Yeah, that's right.\") or respond to empathy "
+                    "(\"Thanks, it's been rough.\"). Use only details already in the "
+                    "chat — do NOT add new clinical facts and do NOT re-narrate your "
+                    "full history."
+                    "</response_instruction>\n"
+                )
+            elif utterance_type == "social_chat":
                 response_instruction = (
                     "<response_instruction>No new clinical facts. "
-                    "Brief reply only; do not repeat prior clinical disclosures."
+                    "Brief emotional reply (1-2 sentences); do not add new symptoms."
+                    "</response_instruction>\n"
+                )
+            elif utterance_type == "filler_only":
+                response_instruction = (
+                    "<response_instruction>No new facts. One-word backchannel only "
+                    "(e.g. \"Mm.\" / \"Yeah.\" / \"Right.\")."
                     "</response_instruction>\n"
                 )
             else:

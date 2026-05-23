@@ -19,7 +19,9 @@ Your job is to look at the student's latest question and decide:
 
 **Aspect-specific questions unlock that aspect only.** "Where is the pain?" unlocks `pain_site` and nothing else. "Does it spread anywhere?" unlocks `pain_radiation` (a protected fact, because the question is specifically on-target).
 
-**Filler-only utterances unlock nothing.** "Okay", "mm-hm", "right", "I see", "go on", "uh-huh" - return `newly_earned: []` and `utterance_type: "filler_only"`.
+**Filler-only utterances unlock nothing.** Reserve `filler_only` for **short backchannels only** (roughly one to four words): "Okay", "Right", "Mm-hm", "I see", "Go on", "Uh-huh", "Got it", "Yeah" on its own. Return `newly_earned: []`.
+
+**Conversational acknowledgements unlock nothing but are NOT filler.** Full-sentence statements with no question that mirror what the patient said, offer empathy, or transition the consultation deserve `utterance_type: "conversational_ack"` — NOT `filler_only`. Examples: "So you've got severe pain on your right side that started suddenly." / "That must be really painful for you." / "Right, so the pain is in your flank and came on yesterday." / "I understand, that sounds awful." / "Okay, so you've told me about the location and when it started." These do not unlock facts; the patient should still respond briefly in character.
 
 **Filler + question = treat as the question.** "Right, do you smoke?" → process the smoking question.
 
@@ -51,8 +53,9 @@ The available scope-sets:
 ## Utterance type taxonomy
 
 Choose one:
-- `filler_only` - acknowledgements with no question (okay, right, mm-hm, I see, go on)
-- `social_chat` - interpersonal check-in about the patient as a person (how are you doing, how are you feeling, how are you holding up, are you okay) - NOT a clinical question about the case
+- `filler_only` - **short** backchannels only (1-4 words): okay, right, mm-hm, I see, go on, got it. NOT for full sentences.
+- `conversational_ack` - full-sentence **statement** (no question) that reflects, summarises, empathises, or transitions; mirrors what the patient already said; does not seek new clinical information. No fact unlock.
+- `social_chat` - **question** checking in on the patient as a person (how are you doing, how are you feeling, how are you holding up, are you okay) - NOT a clinical question about the case
 - `broad_open` - open invitations like "tell me more", "describe it", "anything else"
 - `aspect_specific` - asks about a specific aspect (where is it, when did it start)
 - `specific_direct` - very targeted question that maps to a single fact (does it radiate to the groin)
@@ -60,7 +63,10 @@ Choose one:
 - `unclear` - mishearing, unclear speech, ambiguous reference
 - `closing` - student is wrapping up (thank you, that's all I need, summary)
 
-**Disambiguation tip for `social_chat` vs `aspect_specific`:** "How are you feeling?" with no clinical specifier is `social_chat`. "How is the pain right now?" or "How bad is the pain on a scale of 10?" is `aspect_specific` because it targets a clinical aspect. If in doubt and the question contains a clinical word (pain, symptom, sick, nausea, etc.), prefer the clinical category.
+**Disambiguation tips:**
+- `filler_only` vs `conversational_ack`: if the utterance is more than ~4 words OR restates clinical content the patient already disclosed, use `conversational_ack`, not `filler_only`.
+- `conversational_ack` vs `broad_open`: if there is no question and no invitation to tell more ("tell me more", "anything else?"), use `conversational_ack`. Restating facts is not a broad open.
+- `social_chat` vs `aspect_specific`: "How are you feeling?" with no clinical specifier is `social_chat`. "How is the pain right now?" or "How bad is the pain on a scale of 10?" is `aspect_specific`. If in doubt and the utterance contains a clinical word (pain, symptom, sick, nausea, etc.) **as a question**, prefer the clinical category.
 
 ## Output format
 

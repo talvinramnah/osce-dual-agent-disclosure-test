@@ -46,7 +46,22 @@
 - question: "Right, okay."
   already_earned: ["pc_opening", "pain_site"]
   newly_earned: []
-  rationale: "Filler acknowledgement only - nothing earned."
+  rationale: "Short backchannel only (2 words) - filler_only, nothing earned. Patient gives brief mm/yeah."
+
+- question: "So you've got severe pain in your right side that started suddenly yesterday."
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: []
+  rationale: "Full-sentence reflection mirroring disclosed facts, no question - conversational_ack, not filler_only. Patient may briefly confirm without re-narrating."
+
+- question: "That must be really painful for you."
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: []
+  rationale: "Empathic statement, not a question - conversational_ack. Patient responds briefly (thanks / yeah it's rough) without new clinical facts."
+
+- question: "Okay, so you've told me the pain is on your right side and came on suddenly."
+  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: []
+  rationale: "Summarising/restating what patient already said - conversational_ack. Does NOT unlock pain_temporal (not a broad open). Patient light confirmation only."
 
 - question: "Have you noticed anything else going on?"
   already_earned: ["pc_opening", "pain_site", "assoc_vomiting"]
