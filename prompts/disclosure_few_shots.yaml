@@ -1,0 +1,84 @@
+# Synthetic few-shot examples for the disclosure gate.
+# Each example shows: a student utterance, what was already earned before it,
+# what newly unlocks, and the reasoning rule that justifies it.
+# Add real failure-mode examples here as they surface in testing.
+
+- question: "What brings you in today?"
+  already_earned: []
+  newly_earned: ["pc_opening"]
+  rationale: "Open invitation to talk about the problem - unlocks the presenting complaint opening only."
+
+- question: "Can you tell me a bit more about that?"
+  already_earned: ["pc_opening"]
+  newly_earned: ["pc_duration_brief"]
+  rationale: "Broad expansion after PC opening - permits one brief timing detail and nothing else."
+
+- question: "Tell me more about the pain."
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: ["pain_site", "pain_onset_timing", "pain_onset_mode"]
+  rationale: "Broad expansion within pain-history domain. Releases the surface trio (site, onset timing, onset mode) but NOT the protected facts (character, radiation, constancy)."
+
+- question: "What does the pain feel like? Is it sharp or dull?"
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: ["pain_character"]
+  rationale: "Specific direct question about character of the pain - unlocks the protected character fact."
+
+- question: "Does the pain move anywhere or radiate to anywhere else?"
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: ["pain_radiation"]
+  rationale: "Specific direct question about radiation - unlocks the protected radiation fact."
+
+- question: "Is the pain there all the time or does it come and go?"
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: ["pain_constancy"]
+  rationale: "Specific direct question about constancy / pattern of the pain - unlocks the protected constancy fact."
+
+- question: "Right, okay."
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: []
+  rationale: "Filler acknowledgement only - nothing earned."
+
+- question: "Any other symptoms I should know about?"
+  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_severity"]
+  newly_earned: ["assoc_vomiting"]
+  rationale: "Broad associated-symptoms prompt - the rule for this case is that only the vomiting fact unlocks on a broad associated-symptoms ask. All other associated symptoms require specific questions."
+
+- question: "Have you noticed anything else going on?"
+  already_earned: ["pc_opening", "pain_site", "assoc_vomiting"]
+  newly_earned: []
+  rationale: "Repeat broad associated-symptoms prompt after vomiting already disclosed - no new info on broad prompts, the student needs to ask specifically about further symptoms."
+
+- question: "Have you been having any back pain when you go to pee?"
+  already_earned: ["pc_opening", "assoc_vomiting"]
+  newly_earned: ["assoc_dysuria"]
+  rationale: "Specific direct question about urinary symptoms / dysuria - unlocks the dysuria fact, even though the phrasing is unusual."
+
+- question: "Do you smoke?"
+  already_earned: []
+  newly_earned: ["social_smoking_status"]
+  rationale: "Yes/no on smoking status - unlocks only the status. Amount and duration require a separate specific question."
+
+- question: "How many cigarettes a day, and how long?"
+  already_earned: ["social_smoking_status"]
+  newly_earned: ["social_smoking_amount"]
+  rationale: "Specific quantitative question about smoking amount and duration - unlocks the detailed smoking fact."
+
+- question: "Why are you so worried about surgery in particular?"
+  already_earned: ["pc_opening", "ice_concerns_main"]
+  newly_earned: ["ice_concerns_why_surgery"]
+  rationale: "Targeted follow-up on the surgery concern - unlocks the social context (lost job, struggling to find work)."
+
+- question: "Are you on any medications regularly?"
+  already_earned: ["pmh_conditions"]
+  newly_earned: ["drugs_regular"]
+  rationale: "Question about regular medications - unlocks the name (sodium valproate). Dose requires a specific further question."
+
+- question: "Anything else?"
+  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: []
+  rationale: "Broad expansion within pain-history that has already received its surface release - does not unlock the protected facts (character, radiation, constancy). Student must ask specifically."
+
+- question: "Sorry I missed that, could you say it again?"
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: []
+  rationale: "Clarification request - no new information earned. Patient should naturally repeat or rephrase what was already said."

@@ -1,0 +1,286 @@
+{
+  "case_id": "michael_doyle_right_flank_pain",
+  "patient_summary": "43-year-old man in A&E with sudden-onset severe right-sided flank pain radiating to the right groin, in waves, with one vomiting episode and back pain on urination. PMH epilepsy on sodium valproate.",
+  "facts": [
+    {
+      "id": "pc_opening",
+      "domain": "presenting_complaint",
+      "canonical_response": "I've got this really bad pain in my right side, I'm in absolute agony right now.",
+      "when_to_disclose": "Asked an opening 'what brings you in' / 'what's wrong' / 'how can I help' style question, or any open invitation to talk about the problem.",
+      "protected": false
+    },
+    {
+      "id": "pc_duration_brief",
+      "domain": "presenting_complaint",
+      "canonical_response": "It started about 24 hours ago and I'm still in pain right now.",
+      "when_to_disclose": "Following the initial presenting-complaint opening, when the student gives a broad expansion prompt like 'tell me more' or 'can you describe it' but BEFORE entering the formal pain-history domain. One brief timing detail is permitted with the broad expansion - nothing else.",
+      "protected": false
+    },
+    {
+      "id": "pain_site",
+      "domain": "pain_history",
+      "canonical_response": "It's on my right side, in my right flank, but also around onto my back.",
+      "when_to_disclose": "Asked where the pain is / location of the pain / can you point to it. Also unlocks on a broad expansion prompt within the pain-history domain (e.g. 'tell me about the pain').",
+      "protected": false
+    },
+    {
+      "id": "pain_onset_timing",
+      "domain": "pain_history",
+      "canonical_response": "It all started a day ago, just before I had my lunch yesterday.",
+      "when_to_disclose": "Asked when the pain started / how long it has been going on / when did it begin. Also unlocks on a broad expansion prompt within the pain-history domain.",
+      "protected": false
+    },
+    {
+      "id": "pain_onset_mode",
+      "domain": "pain_history",
+      "canonical_response": "It started really suddenly, there was absolutely no warning, and it just came out of nowhere.",
+      "when_to_disclose": "Asked whether the pain came on suddenly or gradually / mode of onset / how did it start. Also unlocks on a broad expansion prompt within the pain-history domain.",
+      "protected": false
+    },
+    {
+      "id": "pain_character",
+      "domain": "pain_history",
+      "canonical_response": "It's hard to describe. It's like a really intense squeezing ache, but at the same time I keep getting these sharp pains as well. It's like I'm being squeezed and stabbed in my right side.",
+      "when_to_disclose": "STRICTLY PROTECTED. Only unlocks when the student asks specifically about the character or nature of the pain - what it feels like, whether it is sharp, dull, aching, squeezing, stabbing, cramping, burning, throbbing, etc. Does NOT unlock on 'tell me more', 'anything else', or any other broad expansion prompt.",
+      "protected": true
+    },
+    {
+      "id": "pain_radiation",
+      "domain": "pain_history",
+      "canonical_response": "Yes, especially in the last couple of hours I've noticed that the pain is also moving down towards my groin on the same side. It's really so painful.",
+      "when_to_disclose": "STRICTLY PROTECTED. Only unlocks when the student specifically asks whether the pain moves, spreads, radiates, travels, or goes anywhere else. Does NOT unlock on broad expansion prompts.",
+      "protected": true
+    },
+    {
+      "id": "pain_severity",
+      "domain": "pain_history",
+      "canonical_response": "It's eased off just now as we started talking, but at its worst, it's been a nine out of ten. It's the worst pain I've ever felt.",
+      "when_to_disclose": "Asked to rate the pain out of 10, or asked how bad / severe / intense the pain is.",
+      "protected": false
+    },
+    {
+      "id": "pain_constancy",
+      "domain": "pain_history",
+      "canonical_response": "The pain seems to come and go in waves. Talking to you right now it seems to have eased off, but just 15 minutes ago it was really bad.",
+      "when_to_disclose": "STRICTLY PROTECTED. Only unlocks when the student specifically asks whether the pain is constant, comes and goes, fluctuates, or comes in waves. Does NOT unlock on broad expansion prompts.",
+      "protected": true
+    },
+    {
+      "id": "pain_temporal",
+      "domain": "pain_history",
+      "canonical_response": "No it's definitely not getting any better or worse - it's just been consistently bad.",
+      "when_to_disclose": "Asked whether the pain is getting better, getting worse, changing, or how it has progressed over time.",
+      "protected": false
+    },
+    {
+      "id": "pain_exacerbating",
+      "domain": "pain_history",
+      "canonical_response": "No, nothing makes it worse.",
+      "when_to_disclose": "Asked what makes the pain worse / exacerbating factors / aggravating factors.",
+      "protected": false
+    },
+    {
+      "id": "pain_relieving",
+      "domain": "pain_history",
+      "canonical_response": "Nothing makes it better really, I thought getting some sleep and rest might help, but it didn't make a difference.",
+      "when_to_disclose": "Asked what makes the pain better / relieving factors / anything that eases it (not specifically about painkillers).",
+      "protected": false
+    },
+    {
+      "id": "pain_painkillers",
+      "domain": "pain_history",
+      "canonical_response": "I took paracetamol yesterday and today morning, but it didn't do anything for the pain.",
+      "when_to_disclose": "Asked whether painkillers or specific medications have been taken for the pain, and whether they helped.",
+      "protected": false
+    },
+    {
+      "id": "pain_previous_episodes",
+      "domain": "pain_history",
+      "canonical_response": "No, never - I've never had anything like this in my life. This is definitely the first time this has happened to me.",
+      "when_to_disclose": "Asked whether the patient has had this pain or anything like it before / previous episodes / first time.",
+      "protected": false
+    },
+    {
+      "id": "assoc_vomiting",
+      "domain": "associated_symptoms",
+      "canonical_response": "I was sick once this morning right after I had a small amount of breakfast, I think it was because of the pain, but I'm not sure.",
+      "when_to_disclose": "Asked broadly about associated/other symptoms (e.g. 'do you have any other symptoms', 'anything else bothering you'), OR asked specifically about vomiting / being sick / throwing up. This is the ONLY associated symptom that unlocks on a broad associated-symptoms prompt.",
+      "protected": false
+    },
+    {
+      "id": "assoc_vomit_contents",
+      "domain": "associated_symptoms",
+      "canonical_response": "I vomited what I had just eaten for breakfast.",
+      "when_to_disclose": "Asked specifically what the patient vomited up / contents of vomit. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_vomit_blood",
+      "domain": "associated_symptoms",
+      "canonical_response": "I didn't vomit up any blood or anything like that.",
+      "when_to_disclose": "Asked specifically about blood or bile in the vomit. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_nausea",
+      "domain": "associated_symptoms",
+      "canonical_response": "Yeah, I do feel sick, mainly when the pain has been worse over the last day.",
+      "when_to_disclose": "Asked specifically about nausea or feeling sick. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_fever",
+      "domain": "associated_symptoms",
+      "canonical_response": "No, I think my temperature's been fine, but I haven't had a chance to measure it or anything.",
+      "when_to_disclose": "Asked specifically about fever, temperature, or feeling hot. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_dysuria",
+      "domain": "associated_symptoms",
+      "canonical_response": "There's no pain or anything weird, but my back did hurt a bit more when I went to pass urine before you came to speak to me.",
+      "when_to_disclose": "Asked specifically about pain or burning when urinating (dysuria), or about urinary symptoms in general.",
+      "protected": false
+    },
+    {
+      "id": "assoc_urine_blood",
+      "domain": "associated_symptoms",
+      "canonical_response": "No, I haven't noticed any.",
+      "when_to_disclose": "Asked specifically about blood in the urine / haematuria.",
+      "protected": false
+    },
+    {
+      "id": "assoc_urine_frequency",
+      "domain": "associated_symptoms",
+      "canonical_response": "No I haven't noticed any changes in when I go to pee, I've not been going more or less I don't think.",
+      "when_to_disclose": "Asked specifically about urinary frequency or urgency.",
+      "protected": false
+    },
+    {
+      "id": "assoc_bowels",
+      "domain": "associated_symptoms",
+      "canonical_response": "No my bowels are normal for me, I'm always usually a bit constipated, but I opened my bowels yesterday as normal.",
+      "when_to_disclose": "Asked specifically about bowel habit, diarrhoea, or constipation.",
+      "protected": false
+    },
+    {
+      "id": "assoc_trauma",
+      "domain": "associated_symptoms",
+      "canonical_response": "No, I haven't done anything or injured my side or back.",
+      "when_to_disclose": "Asked specifically about trauma, injury, or accidents to the side, back, or abdomen.",
+      "protected": false
+    },
+    {
+      "id": "ice_ideas",
+      "domain": "ice",
+      "canonical_response": "I've absolutely no idea what it is, but it's the worst pain I've ever had.",
+      "when_to_disclose": "Asked what the patient thinks is causing the problem / what they think it might be.",
+      "protected": false
+    },
+    {
+      "id": "ice_concerns_main",
+      "domain": "ice",
+      "canonical_response": "I'm worried it's something serious because the pain is so severe and it hasn't gone away at all over the last 24 hours. I'm really worried about surgery in particular.",
+      "when_to_disclose": "Asked what the patient is worried about / their concerns / fears about the situation.",
+      "protected": false
+    },
+    {
+      "id": "ice_concerns_why_surgery",
+      "domain": "ice",
+      "canonical_response": "Well it's not the surgery itself I'm worried about. It's just that I lost my job a few months ago and I've been really struggling to find a new one, the job market is insane. And now if I have surgery I'll be off work for ages and it will be more difficult to get hired. So I'm stressed about that.",
+      "when_to_disclose": "Asked specifically WHY the patient is worried about surgery, or probed about the reason behind their surgery concern. Should typically only unlock after ice_concerns_main has already been disclosed.",
+      "protected": false
+    },
+    {
+      "id": "ice_expectations",
+      "domain": "ice",
+      "canonical_response": "I just want help with the pain, and to find out what's going on.",
+      "when_to_disclose": "Asked what the patient hopes to get out of the visit / expectations / what they want today.",
+      "protected": false
+    },
+    {
+      "id": "pmh_conditions",
+      "domain": "past_medical_history",
+      "canonical_response": "Yeah - I have epilepsy, I was diagnosed back when I was a child - although I haven't had a seizure in ages.",
+      "when_to_disclose": "Asked about past medical history / medical conditions / any illnesses / health problems.",
+      "protected": false
+    },
+    {
+      "id": "pmh_surgery",
+      "domain": "past_medical_history",
+      "canonical_response": "No, I've never had surgery.",
+      "when_to_disclose": "Asked about previous operations or surgery.",
+      "protected": false
+    },
+    {
+      "id": "drugs_regular",
+      "domain": "drug_history",
+      "canonical_response": "I take sodium valproate for my epilepsy.",
+      "when_to_disclose": "Asked about regular medications, tablets, or drugs they take. Only the name should be given initially - dose and frequency require a specific further question.",
+      "protected": false
+    },
+    {
+      "id": "drugs_valproate_dose",
+      "domain": "drug_history",
+      "canonical_response": "I take it everyday for my epilepsy. I can't remember the exact dose.",
+      "when_to_disclose": "Asked specifically about the dose or frequency of sodium valproate.",
+      "protected": false
+    },
+    {
+      "id": "allergies",
+      "domain": "allergies",
+      "canonical_response": "No, no allergies that I know of.",
+      "when_to_disclose": "Asked about allergies (drug allergies, food allergies, or any allergies).",
+      "protected": false
+    },
+    {
+      "id": "family_history",
+      "domain": "family_history",
+      "canonical_response": "There is nothing relevant that runs in my family that I know of.",
+      "when_to_disclose": "Asked about family medical history / hereditary conditions / anything that runs in the family.",
+      "protected": false
+    },
+    {
+      "id": "social_occupation",
+      "domain": "social_history",
+      "canonical_response": "I was working as a shop assistant in a supermarket, but I got made unemployed when they cut staff about two months ago. It's been such a struggle to find a new job since, I haven't had any luck.",
+      "when_to_disclose": "Asked about occupation, job, work, or what they do for a living.",
+      "protected": false
+    },
+    {
+      "id": "social_living",
+      "domain": "social_history",
+      "canonical_response": "I live with my girlfriend.",
+      "when_to_disclose": "Asked about living situation, who they live with, or home situation.",
+      "protected": false
+    },
+    {
+      "id": "social_alcohol",
+      "domain": "social_history",
+      "canonical_response": "About 8 to 10 pints of normal lager a week - like a pint or two most nights.",
+      "when_to_disclose": "Asked specifically about alcohol intake including amount or units per week, or asked how much they drink. A general 'do you drink' yes/no question alone does not warrant the precise quantity - that would only release a vague answer like 'I have a few pints a week'.",
+      "protected": false
+    },
+    {
+      "id": "social_drugs",
+      "domain": "social_history",
+      "canonical_response": "No, I've never touched any drugs.",
+      "when_to_disclose": "Asked about recreational drug use.",
+      "protected": false
+    },
+    {
+      "id": "social_smoking_status",
+      "domain": "social_history",
+      "canonical_response": "Yep I smoke now and then.",
+      "when_to_disclose": "Asked a yes/no level question about whether they smoke. Does NOT unlock amount or duration on its own.",
+      "protected": false
+    },
+    {
+      "id": "social_smoking_amount",
+      "domain": "social_history",
+      "canonical_response": "I smoke about ten cigarettes a day, and I've been doing this since I was 20.",
+      "when_to_disclose": "Asked specifically about the amount, duration, or history of smoking (e.g. how many a day, how long they've smoked, pack-year history).",
+      "protected": false
+    }
+  ]
+}
