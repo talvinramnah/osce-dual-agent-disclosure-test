@@ -132,3 +132,18 @@
   already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
   newly_earned: ["pain_temporal"]
   rationale: "Second pain-history broad open - pain tier 1 done, tier 2 still available. Releases pain_temporal only. Protected facts (character, radiation, constancy) still need specific questions."
+
+- question: "Okay so you've told me about the pain, is there anything else?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: ["pain_temporal"]
+  rationale: "Summarising what the student already heard does NOT mean pain is exhausted - pain broad #2 still owed. Unlocks pain_temporal only, NOT assoc and NOT exhaustion."
+
+- question: "Is there anything else you can tell me?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: ["pain_temporal"]
+  rationale: "Generic second broad after pain tier 1 - must release pain_temporal before assoc or deflection."
+
+- question: "Anything else?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_temporal", "pain_severity"]
+  newly_earned: []
+  rationale: "Both pain broad tiers earned; student did not steer to associated symptoms and no other scope applies - exhaustion deflection only (patient must NOT recap prior facts)."
