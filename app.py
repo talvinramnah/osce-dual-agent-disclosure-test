@@ -21,7 +21,14 @@ from patient_agent import PatientAgent
 from stt import STT
 from tts import TTS
 
+# Local dev: load from .env. Cloud: secrets come from st.secrets.
 load_dotenv()
+
+# Bridge st.secrets -> os.environ so downstream modules (tts.py, stt.py,
+# openai client, etc.) that read os.environ["..."] keep working unchanged.
+for _key in ("OPENAI_API_KEY", "ELEVENLABS_API_KEY"):
+    if _key not in os.environ and _key in st.secrets:
+        os.environ[_key] = st.secrets[_key]
 
 # ---- Config ----
 BASE_DIR = Path(__file__).parent
