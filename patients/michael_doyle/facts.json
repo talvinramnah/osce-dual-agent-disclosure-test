@@ -282,5 +282,28 @@
       "when_to_disclose": "Asked specifically about the amount, duration, or history of smoking (e.g. how many a day, how long they've smoked, pack-year history).",
       "protected": false
     }
+  ],
+  "broad_open_scopes": [
+    {
+      "id": "pc_duration",
+      "facts": ["pc_duration_brief"],
+      "requires": ["pc_opening"]
+    },
+    {
+      "id": "pain_broad_1",
+      "facts": ["pain_site", "pain_onset_timing", "pain_onset_mode"],
+      "requires": ["pc_opening"]
+    },
+    {
+      "id": "pain_broad_2",
+      "facts": ["pain_temporal"],
+      "requires": ["pain_site", "pain_onset_timing", "pain_onset_mode"]
+    },
+    {
+      "id": "assoc_surface",
+      "facts": ["assoc_vomiting", "assoc_nausea"],
+      "requires": ["pain_temporal"],
+      "assoc_steer_only": true
+    }
   ]
 }

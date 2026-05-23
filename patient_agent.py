@@ -51,7 +51,37 @@ class PatientAgent:
             history_messages.append({"role": "user", "content": turn["student"]})
             history_messages.append({"role": "assistant", "content": turn["patient"]})
 
+        response_instruction = ""
+        if not newly_authorised_facts:
+            if utterance_type == "broad_open":
+                response_instruction = (
+                    "<response_instruction>MANDATORY: No new facts this turn. "
+                    "Reply with exactly ONE short sentence (max 12 words). "
+                    "Do NOT repeat, summarise, paraphrase, or echo ANY clinical detail "
+                    "from the conversation above — no pain location, timing, onset, "
+                    "severity, or symptoms. "
+                    "Sound like a patient who has nothing more to add on a vague prompt. "
+                    "Good: \"I think that's everything I can think of.\" / "
+                    "\"Not really, I've told you what I know.\" / "
+                    "\"Was there something specific you wanted to ask?\" "
+                    "Bad: re-listing pain details or saying \"like I said\" then repeating them."
+                    "</response_instruction>\n"
+                )
+            elif utterance_type in ("filler_only", "social_chat"):
+                response_instruction = (
+                    "<response_instruction>No new clinical facts. "
+                    "Brief reply only; do not repeat prior clinical disclosures."
+                    "</response_instruction>\n"
+                )
+            else:
+                response_instruction = (
+                    "<response_instruction>No new facts authorised. "
+                    "One short deflection only — do NOT recap the history."
+                    "</response_instruction>\n"
+                )
+
         current_user_msg = (
+            f"{response_instruction}"
             f"<student_question>{question}</student_question>\n"
             f"<utterance_type>{utterance_type}</utterance_type>\n"
             f"<newly_authorised_this_turn>\n{new_block}\n</newly_authorised_this_turn>\n"
@@ -64,10 +94,12 @@ class PatientAgent:
             {"role": "user", "content": current_user_msg},
         ]
 
+        temperature = 0.4 if not newly_authorised_facts else 0.7
+
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
-            temperature=0.7,
+            temperature=temperature,
         )
 
         return response.choices[0].message.content.strip()
