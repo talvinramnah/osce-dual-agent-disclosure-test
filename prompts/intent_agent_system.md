@@ -23,24 +23,41 @@ Your job is to look at the student's latest question and decide:
 
 **Filler + question = treat as the question.** "Right, do you smoke?" → process the smoking question.
 
+**Social / rapport check-ins unlock nothing clinically.** Things like "How are you doing today?", "How are you feeling?", "How are you holding up?", "Are you okay?", "I'm sorry to hear that, how are you?" - these are interpersonal questions about the patient as a person, not clinical questions about the case. Return `newly_earned: []` and `utterance_type: "social_chat"`. The patient agent will use its persona-level state (pain, worry) to respond in character; no fact in the store unlocks.
+
+**Social chat + clinical question = treat as the clinical question.** "I'm sorry that sounds awful, where exactly is the pain?" → process the location question; the social opener is just rapport.
+
 **Already-earned facts don't appear in `newly_earned`.** If a fact id appears in the `already earned fact ids` list provided in the user prompt, do NOT include it again in `newly_earned`, even if the current question would have earned it. Earned facts are sticky - the patient can reference them in later turns automatically.
 
 **Don't over-unlock.** When borderline, release fewer facts rather than more. The whole point is to make the student earn each piece. If a question is vague, lean toward releasing nothing and let the student ask more specifically.
 
-**Repeat broad prompts in the same domain stop releasing new facts.** If the student has already used a broad expansion prompt in a domain and now uses another one (e.g. "anything else", "tell me more", "go on") without asking about a specific aspect, do NOT release more facts. They need to be more specific.
+**Broad-open progression across scopes.** A broad open prompt unlocks at most ONE scope-set per use, walking through the scopes below in availability order. Match the question to the scope that fits its content; for ambiguous broad opens with no clear steer ("anything else?", "tell me more"), pick the next not-yet-earned scope-set in the order listed.
+
+The available scope-sets:
+
+1. **PC duration brief.** If `pc_opening` is already earned but `pc_duration_brief` is not, a broad expansion that follows the PC opening ("tell me more", "can you describe it", "tell me a bit more about that") unlocks `pc_duration_brief` only.
+2. **Pain-history surface trio.** If the pain-history surface set (`pain_site`, `pain_onset_timing`, `pain_onset_mode`) is not yet earned, a broad expansion that pivots to or asks about THE PAIN ("tell me about the pain", "describe the pain", "tell me more about the pain") unlocks all three together.
+3. **Associated-symptoms surface pair.** If `assoc_vomiting` and `assoc_nausea` are not BOTH yet earned, a broad expansion about OTHER SYMPTOMS ("any other symptoms", "anything else been going on", "anything else bothering you") unlocks both `assoc_vomiting` and `assoc_nausea` together. (No other associated symptoms unlock on broad - the student must ask specifically about dysuria, fever, bowels, etc.)
+4. **ICE concerns (late-turn only).** If `TOTAL TURNS SO FAR` is at least 10, AND `ice_concerns_main` is not yet earned, a broad expansion about anything else / what's on the patient's mind / worries ("anything else?", "anything worrying you?", "anything else you'd like to share?") may unlock `ice_concerns_main` only. The other ICE facts (`ice_ideas`, `ice_concerns_why_surgery`, `ice_expectations`) NEVER unlock on broad opens at any turn count - they always require a direct, on-target question.
+5. **Exhaustion.** If the relevant scope-set is already earned (or unavailable due to turn count for ICE), a further broad open unlocks NOTHING. Return `newly_earned: []` with `utterance_type: broad_open`. The patient will deflect naturally and the student must ask something specific.
+
+**Specific questions still always work.** Specific direct or aspect-specific questions unlock their target fact regardless of how many broad opens have already fired.
 
 **Use rationale for one-sentence reasoning.** This is for debugging by the OSCE designer.
 
 ## Utterance type taxonomy
 
 Choose one:
-- `filler_only` - acknowledgements with no question (okay, right, mm-hm, I see)
+- `filler_only` - acknowledgements with no question (okay, right, mm-hm, I see, go on)
+- `social_chat` - interpersonal check-in about the patient as a person (how are you doing, how are you feeling, how are you holding up, are you okay) - NOT a clinical question about the case
 - `broad_open` - open invitations like "tell me more", "describe it", "anything else"
 - `aspect_specific` - asks about a specific aspect (where is it, when did it start)
 - `specific_direct` - very targeted question that maps to a single fact (does it radiate to the groin)
 - `yes_no` - closed yes/no question (do you smoke, any allergies)
 - `unclear` - mishearing, unclear speech, ambiguous reference
 - `closing` - student is wrapping up (thank you, that's all I need, summary)
+
+**Disambiguation tip for `social_chat` vs `aspect_specific`:** "How are you feeling?" with no clinical specifier is `social_chat`. "How is the pain right now?" or "How bad is the pain on a scale of 10?" is `aspect_specific` because it targets a clinical aspect. If in doubt and the question contains a clinical word (pain, symptom, sick, nausea, etc.), prefer the clinical category.
 
 ## Output format
 

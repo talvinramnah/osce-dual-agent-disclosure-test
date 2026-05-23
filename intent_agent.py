@@ -76,6 +76,7 @@ class IntentAgent:
             f"FACT STORE:\n{self._build_fact_index()}\n\n"
             f"FEW-SHOT EXAMPLES:\n{self._build_few_shot_block()}\n\n"
             f"CONVERSATION HISTORY (last 5 turns):\n{self._build_history_block(history)}\n\n"
+            f"TOTAL TURNS SO FAR: {len(history)}\n\n"
             f"ALREADY EARNED FACT IDS: {already_earned}\n\n"
             f'STUDENT\'S LATEST QUESTION: "{question}"\n\n'
             "Decide which facts the student has just earned, what type of utterance "

@@ -42,19 +42,26 @@ class OsceTurn:
         utterance_type: str = intent_result.get("utterance_type", "")
         rationale: str = intent_result.get("rationale", "")
 
-        # Step 2: hydrate facts. Include both newly earned AND previously earned
-        # so the patient can naturally reference earlier-disclosed information.
-        all_available_ids = list({*newly_earned_ids, *already_earned})
-        available_facts = [
+        # Step 2: hydrate ONLY the newly authorised facts to full objects (with
+        # canonical wording). Previously disclosed facts are passed as IDs only -
+        # the patient can see them in the conversation history and reference them
+        # if asked, but they should NOT be restated as if disclosing for the first
+        # time. This split prevents the "recap-dumping" failure mode where every
+        # turn with newly_earned=[] would otherwise re-surface the entire history.
+        newly_authorised_facts = [
             self.fact_lookup[fid]
-            for fid in all_available_ids
+            for fid in newly_earned_ids
             if fid in self.fact_lookup
+        ]
+        previously_disclosed_ids = [
+            fid for fid in already_earned if fid in self.fact_lookup
         ]
 
         # Step 3: generate patient response
         patient_response = self.patient_agent.respond(
             question=student_question,
-            available_facts=available_facts,
+            newly_authorised_facts=newly_authorised_facts,
+            previously_disclosed_ids=previously_disclosed_ids,
             history=history,
             utterance_type=utterance_type,
         )

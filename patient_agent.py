@@ -25,19 +25,26 @@ class PatientAgent:
     def respond(
         self,
         question: str,
-        available_facts: list[dict],
+        newly_authorised_facts: list[dict],
+        previously_disclosed_ids: list[str] | None = None,
         history: list[dict] | None = None,
         utterance_type: str = "",
     ) -> str:
         history = history or []
+        previously_disclosed_ids = previously_disclosed_ids or []
 
-        if available_facts:
-            facts_block = "\n".join(
+        if newly_authorised_facts:
+            new_block = "\n".join(
                 f'- {f["id"]}: "{f["canonical_response"]}"'
-                for f in available_facts
+                for f in newly_authorised_facts
             )
         else:
-            facts_block = "(no facts available this turn - respond per persona rules: filler -> minimal, otherwise natural deflection)"
+            new_block = "(none)"
+
+        if previously_disclosed_ids:
+            prior_block = "\n".join(f"- {fid}" for fid in previously_disclosed_ids)
+        else:
+            prior_block = "(none)"
 
         history_messages: list[dict] = []
         for turn in history[-10:]:
@@ -47,7 +54,8 @@ class PatientAgent:
         current_user_msg = (
             f"<student_question>{question}</student_question>\n"
             f"<utterance_type>{utterance_type}</utterance_type>\n"
-            f"<facts_available_to_disclose_this_turn>\n{facts_block}\n</facts_available_to_disclose_this_turn>"
+            f"<newly_authorised_this_turn>\n{new_block}\n</newly_authorised_this_turn>\n"
+            f"<already_disclosed_for_reference_only>\n{prior_block}\n</already_disclosed_for_reference_only>"
         )
 
         messages = [

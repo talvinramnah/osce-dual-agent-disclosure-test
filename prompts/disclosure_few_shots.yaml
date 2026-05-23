@@ -40,13 +40,13 @@
 
 - question: "Any other symptoms I should know about?"
   already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_severity"]
-  newly_earned: ["assoc_vomiting"]
-  rationale: "Broad associated-symptoms prompt - the rule for this case is that only the vomiting fact unlocks on a broad associated-symptoms ask. All other associated symptoms require specific questions."
+  newly_earned: ["assoc_vomiting", "assoc_nausea"]
+  rationale: "Broad associated-symptoms prompt - releases the associated surface pair (vomiting and nausea) together. Other associated symptoms (dysuria, fever, bowels, etc.) still require specific questioning."
 
 - question: "Have you noticed anything else going on?"
   already_earned: ["pc_opening", "pain_site", "assoc_vomiting"]
-  newly_earned: []
-  rationale: "Repeat broad associated-symptoms prompt after vomiting already disclosed - no new info on broad prompts, the student needs to ask specifically about further symptoms."
+  newly_earned: ["assoc_nausea"]
+  rationale: "Broad associated-symptoms prompt - the surface pair (vomiting + nausea) unlocks on broad. Vomiting was already earned via a specific question earlier, so only nausea is newly earned this turn (the cleanup pass would strip the duplicate anyway)."
 
 - question: "Have you been having any back pain when you go to pee?"
   already_earned: ["pc_opening", "assoc_vomiting"]
@@ -75,10 +75,45 @@
 
 - question: "Anything else?"
   already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode"]
-  newly_earned: []
-  rationale: "Broad expansion within pain-history that has already received its surface release - does not unlock the protected facts (character, radiation, constancy). Student must ask specifically."
+  newly_earned: ["assoc_vomiting", "assoc_nausea"]
+  rationale: "Ambiguous broad open - pain-history surface trio already earned, so the next available scope-set is the associated-symptoms surface pair. Releases both vomiting and nausea. Does not unlock protected pain facts (character, radiation, constancy) - those still require specific questioning."
 
 - question: "Sorry I missed that, could you say it again?"
   already_earned: ["pc_opening", "pain_site"]
   newly_earned: []
   rationale: "Clarification request - no new information earned. Patient should naturally repeat or rephrase what was already said."
+
+- question: "Hi, how are you doing today?"
+  already_earned: []
+  newly_earned: []
+  rationale: "Social check-in opener, not a clinical question - utterance_type social_chat, no facts unlock. Patient should give a brief in-character emotional response anchored to persona (pain, worry), not a clinical disclosure."
+
+- question: "I'm sorry to hear that, how are you holding up?"
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: []
+  rationale: "Empathic rapport check-in mid-consultation - utterance_type social_chat, no new clinical facts unlock. Patient may speak about how they are feeling generally (in pain, worried) without disclosing new clinical specifics."
+
+- question: "Are you doing okay right now?"
+  already_earned: ["pc_opening", "pain_site", "pain_severity"]
+  newly_earned: []
+  rationale: "Interpersonal check-in about patient's current state - utterance_type social_chat. Note: this is NOT aspect_specific because it does not target a clinical aspect (pain, symptom). Patient gives in-character emotional response only."
+
+- question: "Have you been having any other symptoms with this?"
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: ["assoc_vomiting", "assoc_nausea"]
+  rationale: "Broad associated-symptoms prompt asked early, before pain-history surface has been opened. Question content steers to associated-symptoms scope - releases the associated surface pair (vomiting + nausea). Student can still ask about pain specifically later."
+
+- question: "Is there anything else worrying you about this?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_severity", "pain_temporal", "assoc_vomiting", "assoc_nausea", "assoc_dysuria", "pmh_conditions"]
+  newly_earned: ["ice_concerns_main"]
+  rationale: "Late-turn broad expansion (TOTAL TURNS SO FAR is 11, beyond the 10-turn threshold) framed around concerns - releases ice_concerns_main only. ice_ideas, ice_concerns_why_surgery, and ice_expectations remain direct-question-only at any turn count."
+
+- question: "Anything else you'd like to mention?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_severity", "assoc_vomiting", "assoc_nausea", "ice_concerns_main", "pmh_conditions", "drugs_regular", "allergies"]
+  newly_earned: []
+  rationale: "Broad expansion at scope exhaustion - all available scope-sets (PC duration, pain surface, associated surface, late-turn ICE concerns) are already earned. Returns nothing. Patient should deflect and prompt the student to ask something specific."
+
+- question: "Tell me more."
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: ["pain_site", "pain_onset_timing", "pain_onset_mode"]
+  rationale: "Ambiguous broad open with no clear scope steer - PC duration already earned, so next not-yet-earned scope-set is the pain-history surface trio. Releases all three pain surface facts together."
