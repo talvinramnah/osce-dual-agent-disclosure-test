@@ -69,7 +69,7 @@
       "id": "pain_temporal",
       "domain": "pain_history",
       "canonical_response": "It's been consistently bad since it started, it hasn't really got any better or worse.",
-      "when_to_disclose": "Asked whether the pain is getting better, getting worse, changing, or how it has progressed over time. ALSO unlocks on the second pain-history broad open (after site, onset timing, and onset mode are already out) - not on the first broad pain expansion.",
+      "when_to_disclose": "Asked whether the pain is getting better, getting worse, changing, or how it has progressed over time.",
       "protected": false
     },
     {
@@ -281,29 +281,6 @@
       "canonical_response": "I smoke about ten cigarettes a day, and I've been doing this since I was 20.",
       "when_to_disclose": "Asked specifically about the amount, duration, or history of smoking (e.g. how many a day, how long they've smoked, pack-year history).",
       "protected": false
-    }
-  ],
-  "broad_open_scopes": [
-    {
-      "id": "pc_duration",
-      "facts": ["pc_duration_brief"],
-      "requires": ["pc_opening"]
-    },
-    {
-      "id": "pain_broad_1",
-      "facts": ["pain_site", "pain_onset_timing", "pain_onset_mode"],
-      "requires": ["pc_opening"]
-    },
-    {
-      "id": "pain_broad_2",
-      "facts": ["pain_temporal"],
-      "requires": ["pain_site", "pain_onset_timing", "pain_onset_mode"]
-    },
-    {
-      "id": "assoc_surface",
-      "facts": ["assoc_vomiting", "assoc_nausea"],
-      "requires": ["pain_temporal"],
-      "assoc_steer_only": true
     }
   ]
 }

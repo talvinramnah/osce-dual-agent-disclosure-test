@@ -15,28 +15,18 @@
 
 - question: "Tell me about the chest pain."
   already_earned: ["pc_opening", "pc_duration_brief"]
-  newly_earned: ["pain_site", "pain_character", "pain_onset_timing"]
-  rationale: "Pain-history broad open #1. Releases site, character, and onset timing together - generous first pain broad. Does NOT release temporal constancy, protected facts, severity, or onset mode."
+  newly_earned: ["pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  rationale: "Broad expansion within the pain-history domain. Releases site, character, timing, and constancy - but NOT the protected facts (radiation, exacerbating, relieving), NOT severity, and NOT onset mode (those need specific questions)."
 
 - question: "Could you describe the pain to me?"
   already_earned: ["pc_opening", "pc_duration_brief"]
-  newly_earned: ["pain_site", "pain_character", "pain_onset_timing"]
-  rationale: "Equivalent to 'tell me about the pain' - pain broad #1 only. 'Describe' is still a broad open, not a character-specific question."
+  newly_earned: ["pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  rationale: "Equivalent to 'tell me about the pain' - same broad pain-domain unlock set. The word 'describe' does NOT specifically target character alone; it's still a broad open prompt and protected facts (radiation, exacerbating, relieving) remain locked."
 
 - question: "Walk me through what's been happening with the pain."
   already_earned: ["pc_opening", "pc_duration_brief"]
-  newly_earned: ["pain_site", "pain_character", "pain_onset_timing"]
-  rationale: "Pain broad #1. Empathic framing does not change the rule - protected facts still need specific questions."
-
-- question: "Is there anything else going on?"
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_character", "pain_onset_timing"]
-  newly_earned: ["pain_temporal_constancy"]
-  rationale: "Ambiguous broad while pain broad #2 is available - must complete second pain broad before associated symptoms. Releases temporal constancy only."
-
-- question: "Tell me more about it."
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_character", "pain_onset_timing"]
-  newly_earned: ["pain_temporal_constancy"]
-  rationale: "Second pain-history broad open - smaller release (constancy only) before assoc/PMH broad scopes."
+  newly_earned: ["pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  rationale: "Broad pain-domain expansion. Same unlock set. Empathic framing does not change the disclosure rule - protected facts (radiation, exacerbating, relieving) require specific questions."
 
 - question: "Does the pain spread anywhere?"
   already_earned: ["pc_opening", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
@@ -74,14 +64,14 @@
   rationale: "Specific direct question about mode of onset - unlocks onset mode only. Onset mode does not unlock on broad pain expansions for this case."
 
 - question: "Any other symptoms going on?"
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  already_earned: ["pc_opening", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
   newly_earned: ["assoc_fever"]
-  rationale: "Clear associated-symptoms steer after BOTH pain broad opens are earned - releases fever only on this case's broad assoc rule."
+  rationale: "Broad associated-symptoms prompt - for this case ONLY assoc_fever unlocks on a broad assoc ask. Malaise, weakness, recent cold, and negatives all require specific questions."
 
 - question: "Apart from the chest pain, have you noticed anything else going on in your body?"
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
   newly_earned: ["assoc_fever"]
-  rationale: "Clear associated-symptoms steer after both pain broad tiers are earned. Releases fever only. Does NOT release pain_radiation (protected; not asked specifically)."
+  rationale: "Despite the phrase 'elsewhere in your body', this is still a broad associated-symptoms prompt with no specific organ system or symptom named. Releases only fever (the broad-assoc rule). Does NOT release pain_radiation (radiation is a pain-domain protected fact and was not asked about specifically)."
 
 - question: "Have you been unwell recently?"
   already_earned: ["pc_opening", "assoc_fever"]
@@ -129,14 +119,9 @@
   rationale: "Signposting statement, not a question - no disclosure. Patient does not start the history yet."
 
 - question: "Anything else about the pain?"
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_character", "pain_onset_timing"]
-  newly_earned: ["pain_temporal_constancy"]
-  rationale: "Pain broad #2 while tier 1 is done - releases constancy only. Protected facts (radiation, exacerbating, relieving) still need specific questions."
-
-- question: "Anything else about the pain?"
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  already_earned: ["pc_opening", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
   newly_earned: []
-  rationale: "Both pain broad tiers exhausted - further vague pain broads unlock nothing. Student must ask specifically about radiation, exacerbating, relieving, severity, or onset mode."
+  rationale: "Repeat broad expansion within the pain-history domain after the surface release has already happened. Does NOT release the protected facts (radiation, exacerbating, relieving). Student needs to ask specifically about each remaining aspect."
 
 - question: "Thanks Daniel, that's everything I needed to ask."
   already_earned: ["pc_opening", "pain_site", "pain_character"]
