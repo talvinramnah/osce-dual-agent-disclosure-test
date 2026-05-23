@@ -1,0 +1,129 @@
+# Synthetic few-shot examples for the Daniel O'Connor case.
+# Each example shows: a student utterance, what was already earned before it,
+# what newly unlocks, and the reasoning rule that justifies it.
+# Add real failure-mode examples here as they surface in testing.
+
+- question: "Hi Daniel, what brings you in today?"
+  already_earned: []
+  newly_earned: ["pc_opening"]
+  rationale: "Open invitation to talk about the problem - unlocks the presenting complaint opening only."
+
+- question: "Sorry to hear that. Can you tell me a bit more about what's been happening?"
+  already_earned: ["pc_opening"]
+  newly_earned: ["pc_duration_brief"]
+  rationale: "Broad expansion after PC opening, before formal pain history - permits one brief timing detail and nothing else."
+
+- question: "Tell me about the chest pain."
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: ["pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  rationale: "Broad expansion within the pain-history domain. Releases site, character, timing, and constancy - but NOT the protected facts (radiation, exacerbating, relieving), NOT severity, and NOT onset mode (those need specific questions)."
+
+- question: "Could you describe the pain to me?"
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: ["pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  rationale: "Equivalent to 'tell me about the pain' - same broad pain-domain unlock set. The word 'describe' does NOT specifically target character alone; it's still a broad open prompt and protected facts (radiation, exacerbating, relieving) remain locked."
+
+- question: "Walk me through what's been happening with the pain."
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: ["pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  rationale: "Broad pain-domain expansion. Same unlock set. Empathic framing does not change the disclosure rule - protected facts (radiation, exacerbating, relieving) require specific questions."
+
+- question: "Does the pain spread anywhere?"
+  already_earned: ["pc_opening", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  newly_earned: ["pain_radiation"]
+  rationale: "Specific direct question about radiation - unlocks the protected radiation fact."
+
+- question: "Does anything make the pain worse?"
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: ["pain_exacerbating"]
+  rationale: "Specific direct question about exacerbating factors - unlocks the protected exacerbating fact."
+
+- question: "Is it worse when you breathe in?"
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: ["pain_exacerbating"]
+  rationale: "Specific direct question naming a specific exacerbating factor (breathing) - unlocks the protected exacerbating fact."
+
+- question: "Does anything help to ease it?"
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: ["pain_relieving"]
+  rationale: "Specific direct question about relieving factors - unlocks the protected relieving fact."
+
+- question: "Does sitting in a particular position help at all?"
+  already_earned: ["pc_opening", "pain_character"]
+  newly_earned: ["pain_relieving"]
+  rationale: "Specific direct question naming a specific relieving factor (position) - unlocks the protected relieving fact."
+
+- question: "How bad is it out of ten?"
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: ["pain_severity"]
+  rationale: "Specific severity score question - unlocks severity only."
+
+- question: "Did it come on suddenly or gradually?"
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: ["pain_onset_mode"]
+  rationale: "Specific direct question about mode of onset - unlocks onset mode only. Onset mode does not unlock on broad pain expansions for this case."
+
+- question: "Any other symptoms going on?"
+  already_earned: ["pc_opening", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  newly_earned: ["assoc_fever"]
+  rationale: "Broad associated-symptoms prompt - for this case ONLY assoc_fever unlocks on a broad assoc ask. Malaise, weakness, recent cold, and negatives all require specific questions."
+
+- question: "Apart from the chest pain, have you noticed anything else going on in your body?"
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: ["assoc_fever"]
+  rationale: "Despite the phrase 'elsewhere in your body', this is still a broad associated-symptoms prompt with no specific organ system or symptom named. Releases only fever (the broad-assoc rule). Does NOT release pain_radiation (radiation is a pain-domain protected fact and was not asked about specifically)."
+
+- question: "Have you been unwell recently?"
+  already_earned: ["pc_opening", "assoc_fever"]
+  newly_earned: ["assoc_recent_cold"]
+  rationale: "Specific question about recent illness / preceding viral symptoms - unlocks the recent cold and cough fact."
+
+- question: "Have you had any cough, shortness of breath or palpitations?"
+  already_earned: ["pc_opening", "assoc_fever"]
+  newly_earned: ["assoc_current_cough", "assoc_sob", "assoc_palpitations"]
+  rationale: "Compound specific question listing three distinct symptoms by name - unlocks all three. Each is asked about specifically by name."
+
+- question: "Any past medical problems?"
+  already_earned: ["pc_opening"]
+  newly_earned: ["pmh_conditions", "pmh_surgery"]
+  rationale: "Broad PMH question - for this case, both the 'generally healthy' signposting and the prior wrist surgery are mentioned together as one-time signposting. Cardiac history is NOT included - that requires a specific cardiac probe."
+
+- question: "Any history of heart problems?"
+  already_earned: ["pc_opening", "pmh_conditions"]
+  newly_earned: ["pmh_cardiac"]
+  rationale: "Specific cardiac history question - unlocks the cardiac PMH fact (which is a 'No' but matters clinically)."
+
+- question: "Any heart problems running in the family?"
+  already_earned: ["pc_opening"]
+  newly_earned: ["fh_cardiac"]
+  rationale: "Specific cardiac family history question - unlocks cardiac FH only. The broad family history fact is not also released; the question was targeted."
+
+- question: "Do you smoke or drink alcohol?"
+  already_earned: ["pc_opening"]
+  newly_earned: ["social_smoking", "social_alcohol"]
+  rationale: "Compound specific question naming both smoking and alcohol - unlocks both."
+
+- question: "Okay, right."
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: []
+  rationale: "Filler acknowledgement with no question - nothing earned. Patient should remain silent."
+
+- question: "Symptoms?"
+  already_earned: ["pc_opening"]
+  newly_earned: []
+  rationale: "Single word with no clear question structure - not a valid prompt. Patient remains silent."
+
+- question: "I'd like to ask you a few questions about your symptoms today."
+  already_earned: []
+  newly_earned: []
+  rationale: "Signposting statement, not a question - no disclosure. Patient does not start the history yet."
+
+- question: "Anything else about the pain?"
+  already_earned: ["pc_opening", "pain_site", "pain_character", "pain_onset_timing", "pain_temporal_constancy"]
+  newly_earned: []
+  rationale: "Repeat broad expansion within the pain-history domain after the surface release has already happened. Does NOT release the protected facts (radiation, exacerbating, relieving). Student needs to ask specifically about each remaining aspect."
+
+- question: "Thanks Daniel, that's everything I needed to ask."
+  already_earned: ["pc_opening", "pain_site", "pain_character"]
+  newly_earned: []
+  rationale: "Closing statement - nothing to unlock. Patient should say 'Thanks.' and stop."

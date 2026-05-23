@@ -1,0 +1,342 @@
+{
+  "case_id": "daniel_oconnor_chest_pain",
+  "patient_summary": "20-year-old male librarian presenting to A&E with one week of sharp central chest pain that is constant, worse on deep breath in, and relieved by sitting up and leaning forward. Associated fever (38.5C measured this morning), malaise, and weakness. Recent cold and cough two weeks ago, resolved after a few days. PMH: childhood left wrist fracture repair. Never smoker, light alcohol intake.",
+  "facts": [
+    {
+      "id": "pc_opening",
+      "domain": "presenting_complaint",
+      "canonical_response": "I've got this really bad pain in my chest.",
+      "when_to_disclose": "Asked an opening 'what brings you in' / 'what's been happening' / 'how can I help' style question, or any open invitation to talk about why they are here. Does NOT unlock during introductions, consent confirmation ('do I have your consent to ask some questions'), or signposting statements ('I'd like to ask about your symptoms today').",
+      "protected": false
+    },
+    {
+      "id": "pc_duration_brief",
+      "domain": "presenting_complaint",
+      "canonical_response": "It's been about a week.",
+      "when_to_disclose": "Following the initial PC opening, when the student gives a broad expansion prompt like 'tell me more' or 'can you describe it' but BEFORE the formal pain-history domain has been opened. One brief timing detail is permitted with the broad expansion - nothing else.",
+      "protected": false
+    },
+    {
+      "id": "pain_site",
+      "domain": "pain_history",
+      "canonical_response": "It's in the centre of my chest.",
+      "when_to_disclose": "Asked specifically where the pain is / location / can you point to it. ALSO unlocks on a broad pain-domain expansion prompt like 'tell me about the chest pain', 'describe the pain', 'tell me more about the pain'.",
+      "protected": false
+    },
+    {
+      "id": "pain_onset_timing",
+      "domain": "pain_history",
+      "canonical_response": "About a week ago.",
+      "when_to_disclose": "Asked when the pain started / how long it has been going on / when did it begin. ALSO unlocks on a broad pain-domain expansion prompt.",
+      "protected": false
+    },
+    {
+      "id": "pain_onset_mode",
+      "domain": "pain_history",
+      "canonical_response": "It came on quite suddenly.",
+      "when_to_disclose": "Asked specifically whether the pain came on suddenly or gradually / mode of onset / how did it start. Does NOT unlock on broad expansion prompts - student must ask specifically about onset mode.",
+      "protected": false
+    },
+    {
+      "id": "pain_character",
+      "domain": "pain_history",
+      "canonical_response": "It's a sharp pain, like a stabbing pain, but not quite that severe.",
+      "when_to_disclose": "Asked specifically about the character or nature of the pain (sharp, dull, aching, stabbing, burning, throbbing, crushing, tight, etc.). ALSO unlocks on a broad pain-domain expansion prompt like 'tell me about the chest pain' or 'describe the pain'.",
+      "protected": false
+    },
+    {
+      "id": "pain_radiation",
+      "domain": "pain_history",
+      "canonical_response": "No, it doesn't spread anywhere.",
+      "when_to_disclose": "STRICTLY PROTECTED. Only unlocks when the student asks specifically whether the pain moves, spreads, radiates, travels, or goes anywhere else (e.g. arm, jaw, neck, back). Does NOT unlock on broad expansion prompts such as 'tell me about the pain', 'describe the pain', or 'anything else about the pain'.",
+      "protected": true
+    },
+    {
+      "id": "pain_severity",
+      "domain": "pain_history",
+      "canonical_response": "About an eight out of ten.",
+      "when_to_disclose": "Asked for a severity score (out of ten), or asked how bad / severe / intense the pain is. Does NOT unlock on broad expansion prompts - the student must specifically ask about severity.",
+      "protected": false
+    },
+    {
+      "id": "pain_temporal_constancy",
+      "domain": "pain_history",
+      "canonical_response": "It's been pretty constant.",
+      "when_to_disclose": "Asked whether the pain is constant / comes and goes / fluctuates, whether it changes over time, whether it is getting better or worse, or whether it varies through the day. ALSO unlocks on a broad pain-domain expansion prompt.",
+      "protected": false
+    },
+    {
+      "id": "pain_exacerbating",
+      "domain": "pain_history",
+      "canonical_response": "Taking a deep breath in makes it worse.",
+      "when_to_disclose": "STRICTLY PROTECTED. Only unlocks when the student asks specifically what makes the pain worse / exacerbating factors / aggravating factors, OR specifically asks whether breathing in, movement, coughing, or any other action makes it worse. Does NOT unlock on broad expansion prompts.",
+      "protected": true
+    },
+    {
+      "id": "pain_relieving",
+      "domain": "pain_history",
+      "canonical_response": "Sitting up and leaning forward helps ease it.",
+      "when_to_disclose": "STRICTLY PROTECTED. Only unlocks when the student asks specifically what makes the pain better / relieving factors / anything that eases it, OR specifically asks whether posture, position, or any specific action changes the pain. Does NOT unlock on broad expansion prompts.",
+      "protected": true
+    },
+    {
+      "id": "pain_painkillers",
+      "domain": "pain_history",
+      "canonical_response": "I've taken paracetamol for it, and it's helped a bit.",
+      "when_to_disclose": "Asked specifically whether painkillers or any medication have been taken for the pain, and whether they helped. Note: if 'any medications regularly' is asked instead, that maps to the drug_history domain, not this fact.",
+      "protected": false
+    },
+    {
+      "id": "assoc_fever",
+      "domain": "associated_symptoms",
+      "canonical_response": "I've felt hot and feverish as well.",
+      "when_to_disclose": "Asked broadly about other / associated / accompanying symptoms (e.g. 'any other symptoms', 'anything else with it', 'any associated symptoms'), OR asked specifically about fever, temperature, or feeling hot. This is the ONLY associated symptom that unlocks on a broad associated-symptoms prompt for this case.",
+      "protected": false
+    },
+    {
+      "id": "assoc_fever_duration",
+      "domain": "associated_symptoms",
+      "canonical_response": "About the same length of time, around a week.",
+      "when_to_disclose": "Asked specifically how long the fever has been going on / duration of the fever. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_fever_temp",
+      "domain": "associated_symptoms",
+      "canonical_response": "I checked this morning and it was thirty-eight point five.",
+      "when_to_disclose": "Asked specifically whether the temperature has been measured / what the temperature was / actual reading. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_malaise",
+      "domain": "associated_symptoms",
+      "canonical_response": "Yeah, I've just felt a bit rough.",
+      "when_to_disclose": "Asked specifically about feeling generally unwell, run down, rough, or off. Does NOT unlock on broad associated-symptoms prompts (the only symptom that does is fever).",
+      "protected": false
+    },
+    {
+      "id": "assoc_weakness",
+      "domain": "associated_symptoms",
+      "canonical_response": "Yeah, I feel quite weak all over.",
+      "when_to_disclose": "Asked specifically about weakness, lethargy, or feeling weak. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_recent_cold",
+      "domain": "associated_symptoms",
+      "canonical_response": "Yeah, I had a bit of a cold and a cough a couple of weeks ago. I took a day off work, then I got better after a few days.",
+      "when_to_disclose": "Asked specifically about recent illness, recent cold, recent cough, recent viral symptoms, or any illness in the preceding weeks. Also unlocks on a specific question about whether anything happened before the chest pain started. Does NOT unlock on broad associated-symptoms prompts.",
+      "protected": false
+    },
+    {
+      "id": "assoc_sob",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about shortness of breath, breathlessness, or trouble breathing.",
+      "protected": false
+    },
+    {
+      "id": "assoc_palpitations",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about palpitations, racing heart, or feeling the heart pound.",
+      "protected": false
+    },
+    {
+      "id": "assoc_fainting",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about fainting, passing out, nearly fainting, light-headedness, or loss of consciousness.",
+      "protected": false
+    },
+    {
+      "id": "assoc_leg_swelling",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about swelling in the legs or ankles.",
+      "protected": false
+    },
+    {
+      "id": "assoc_leg_pain",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about pain in the legs / leg pain (distinct from chest pain).",
+      "protected": false
+    },
+    {
+      "id": "assoc_calf_signs",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about calf tenderness, calf redness, calf swelling, or any signs of a clot in the leg.",
+      "protected": false
+    },
+    {
+      "id": "assoc_immobility",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about recent prolonged immobility, long-haul travel, long car journeys, or recent surgery/hospitalisation.",
+      "protected": false
+    },
+    {
+      "id": "assoc_current_cough",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about a current cough (note: the recent cold/cough from two weeks ago is a separate fact). Should disambiguate clearly - if the student asks about cough generally without time anchor, the recent cold fact may apply instead, but a question framed as 'do you have a cough now / currently' maps here.",
+      "protected": false
+    },
+    {
+      "id": "assoc_haemoptysis",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about coughing up blood / blood in sputum / haemoptysis.",
+      "protected": false
+    },
+    {
+      "id": "assoc_wheeze",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about wheeze or whistling when breathing.",
+      "protected": false
+    },
+    {
+      "id": "assoc_weight_loss",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about weight loss or weight changes.",
+      "protected": false
+    },
+    {
+      "id": "assoc_night_sweats",
+      "domain": "associated_symptoms",
+      "canonical_response": "No.",
+      "when_to_disclose": "Asked specifically about night sweats or sweating at night.",
+      "protected": false
+    },
+    {
+      "id": "ice_ideas",
+      "domain": "ice",
+      "canonical_response": "I'm not sure what it is. I just know it's not normal.",
+      "when_to_disclose": "Asked specifically what the patient thinks is causing the problem / what they think it might be / their own ideas about it.",
+      "protected": false
+    },
+    {
+      "id": "ice_concerns",
+      "domain": "ice",
+      "canonical_response": "I'm a bit worried because it's chest pain, and it's been going on a week.",
+      "when_to_disclose": "Asked specifically what the patient is worried about / their concerns / what is on their mind about the situation.",
+      "protected": false
+    },
+    {
+      "id": "ice_expectations",
+      "domain": "ice",
+      "canonical_response": "I want to know what's causing it and for the pain to be sorted.",
+      "when_to_disclose": "Asked specifically what the patient hopes to get out of the visit / expectations / what they want today.",
+      "protected": false
+    },
+    {
+      "id": "pmh_conditions",
+      "domain": "past_medical_history",
+      "canonical_response": "No, nothing significant. I'm normally pretty healthy.",
+      "when_to_disclose": "Asked about past medical conditions, medical problems, health problems, any illnesses, or whether they have any conditions. ALSO unlocks on a broad PMH question.",
+      "protected": false
+    },
+    {
+      "id": "pmh_cardiac",
+      "domain": "past_medical_history",
+      "canonical_response": "No, I've never had any heart problems.",
+      "when_to_disclose": "Asked specifically about heart problems, cardiac history, or any heart conditions. Does NOT unlock on broad PMH questions - this needs a specific cardiac probe.",
+      "protected": false
+    },
+    {
+      "id": "pmh_surgery",
+      "domain": "past_medical_history",
+      "canonical_response": "I broke my left wrist a few years ago falling off my bike. I had surgery to fix it. It's fine now.",
+      "when_to_disclose": "Asked about previous operations, surgery, or hospitalisations. ALSO unlocks alongside pmh_conditions on a broad PMH question (signposted once - mentioned as part of an otherwise unremarkable history).",
+      "protected": false
+    },
+    {
+      "id": "drugs_prescription",
+      "domain": "drug_history",
+      "canonical_response": "I don't take any prescription medicines.",
+      "when_to_disclose": "Asked about regular medications, prescription medications, or what medicines they take.",
+      "protected": false
+    },
+    {
+      "id": "drugs_otc",
+      "domain": "drug_history",
+      "canonical_response": "I've been taking paracetamol, and it's helped a bit.",
+      "when_to_disclose": "Asked about over-the-counter medications, pain relief, or whether they've taken anything for the symptoms. ALSO unlocks alongside drugs_prescription when the student asks broadly about all medications they have taken.",
+      "protected": false
+    },
+    {
+      "id": "allergies",
+      "domain": "allergies",
+      "canonical_response": "No, I'm not allergic to anything as far as I know.",
+      "when_to_disclose": "Asked about allergies (drug allergies, food allergies, or any allergies).",
+      "protected": false
+    },
+    {
+      "id": "fh_general",
+      "domain": "family_history",
+      "canonical_response": "Nothing significant that I know of.",
+      "when_to_disclose": "Asked broadly about family medical history, hereditary conditions, or anything that runs in the family.",
+      "protected": false
+    },
+    {
+      "id": "fh_cardiac",
+      "domain": "family_history",
+      "canonical_response": "No, no one in my family has had heart problems.",
+      "when_to_disclose": "Asked specifically about heart disease or heart problems in the family, or any sudden cardiac deaths in family. Does NOT unlock on broad family history questions - needs a specific cardiac family question.",
+      "protected": false
+    },
+    {
+      "id": "social_smoking",
+      "domain": "social_history",
+      "canonical_response": "I don't smoke, and I never have.",
+      "when_to_disclose": "Asked about smoking, cigarettes, vaping, or tobacco use.",
+      "protected": false
+    },
+    {
+      "id": "social_alcohol",
+      "domain": "social_history",
+      "canonical_response": "I usually have a pint of lager every other night, and sometimes a bit more at the weekend.",
+      "when_to_disclose": "Asked about alcohol use, drinking, or units per week.",
+      "protected": false
+    },
+    {
+      "id": "social_drugs",
+      "domain": "social_history",
+      "canonical_response": "No, I've never used illegal drugs.",
+      "when_to_disclose": "Asked about recreational drugs, illegal drugs, or IV drug use.",
+      "protected": false
+    },
+    {
+      "id": "social_living",
+      "domain": "social_history",
+      "canonical_response": "I live on my own in a rented flat.",
+      "when_to_disclose": "Asked about living situation, who they live with, or home situation.",
+      "protected": false
+    },
+    {
+      "id": "social_occupation",
+      "domain": "social_history",
+      "canonical_response": "I'm a librarian.",
+      "when_to_disclose": "Asked about occupation, job, work, or what they do for a living.",
+      "protected": false
+    },
+    {
+      "id": "social_exercise",
+      "domain": "social_history",
+      "canonical_response": "I run a few times a week, although I've had to take it easy the past week.",
+      "when_to_disclose": "Asked about exercise, physical activity, or how active they are.",
+      "protected": false
+    },
+    {
+      "id": "social_function",
+      "domain": "social_history",
+      "canonical_response": "It's been hard to get comfortable with it.",
+      "when_to_disclose": "Asked how the pain has affected daily life / activities / function / how they've been coping.",
+      "protected": false
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 """
 Bleep64 OSCE Prototype - Streamlit app.
 
-Test harness for the two-agent OSCE patient architecture. Talk (or type) to
-Michael Doyle, watch the disclosure debug panel on the right to see which
-facts the intent agent released each turn and why.
+Test harness for the two-agent OSCE patient architecture. Pick a patient
+from the sidebar, then talk (or type) to them. The right-hand panel shows
+the disclosure debug for the most recent turn.
 """
 
 import json
@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 from intent_agent import IntentAgent
 from orchestrator import OsceTurn
 from patient_agent import PatientAgent
+from patients.registry import PATIENTS, get_patient, list_patients, validate
 from stt import STT
 from tts import TTS
 
@@ -30,39 +31,36 @@ for _key in ("OPENAI_API_KEY", "ELEVENLABS_API_KEY"):
     if _key not in os.environ and _key in st.secrets:
         os.environ[_key] = st.secrets[_key]
 
-# ---- Config ----
-BASE_DIR = Path(__file__).parent
-FACT_STORE_PATH = BASE_DIR / "facts" / "michael_doyle.json"
-INTENT_PROMPT_PATH = BASE_DIR / "prompts" / "intent_agent_system.md"
-PATIENT_PROMPT_PATH = BASE_DIR / "prompts" / "patient_agent_system.md"
-FEW_SHOTS_PATH = BASE_DIR / "prompts" / "disclosure_few_shots.yaml"
-
 VOICE_ID = "tkWr6klIDADZ7T8TWUuj"
 INTENT_MODEL = "gpt-4o-mini"
 PATIENT_MODEL = "gpt-4o"
 
+DEFAULT_PATIENT_ID = next(iter(PATIENTS))
 
-# ---- Cached resources ----
+
+# ---- Cached resources, keyed by patient_id ----
 
 @st.cache_resource
-def load_fact_store() -> dict:
-    with open(FACT_STORE_PATH) as f:
+def load_fact_store(patient_id: str) -> dict:
+    path: Path = get_patient(patient_id)["facts_path"]
+    with open(path) as f:
         return json.load(f)
 
 
 @st.cache_resource
-def load_prompts() -> dict:
+def load_prompts(patient_id: str) -> dict:
+    entry = get_patient(patient_id)
     return {
-        "intent": INTENT_PROMPT_PATH.read_text(),
-        "patient": PATIENT_PROMPT_PATH.read_text(),
-        "few_shots": yaml.safe_load(FEW_SHOTS_PATH.read_text()),
+        "intent": entry["intent_prompt_path"].read_text(),
+        "patient": entry["patient_prompt_path"].read_text(),
+        "few_shots": yaml.safe_load(entry["few_shots_path"].read_text()),
     }
 
 
 @st.cache_resource
-def build_turn() -> OsceTurn:
-    fact_store = load_fact_store()
-    prompts = load_prompts()
+def build_turn(patient_id: str) -> OsceTurn:
+    fact_store = load_fact_store(patient_id)
+    prompts = load_prompts(patient_id)
     intent = IntentAgent(
         model=INTENT_MODEL,
         system_prompt=prompts["intent"],
@@ -89,12 +87,20 @@ def build_stt() -> STT:
 # ---- Session state ----
 
 def init_state():
+    if "patient_id" not in st.session_state:
+        st.session_state.patient_id = DEFAULT_PATIENT_ID
     if "history" not in st.session_state:
         st.session_state.history = []
     if "earned" not in st.session_state:
         st.session_state.earned = []
     if "last_meta" not in st.session_state:
         st.session_state.last_meta = None
+
+
+def reset_conversation():
+    st.session_state.history = []
+    st.session_state.earned = []
+    st.session_state.last_meta = None
 
 
 # ---- UI ----
@@ -106,7 +112,47 @@ st.set_page_config(
 )
 init_state()
 
-st.title("Bleep64 OSCE Prototype - Michael Doyle")
+# Fail loud if the registry points at missing files - much nicer than a
+# FileNotFoundError appearing several layers deep on the first turn.
+_problems = validate()
+if _problems:
+    st.error("Patient registry is misconfigured:\n\n" + "\n".join(f"- {p}" for p in _problems))
+    st.stop()
+
+# ---- Sidebar: patient selector ----
+
+with st.sidebar:
+    st.header("Patient")
+    patient_entries = list_patients()
+    patient_ids = [p["id"] for p in patient_entries]
+    current_idx = patient_ids.index(st.session_state.patient_id)
+    selected_id = st.radio(
+        "Choose a case",
+        options=patient_ids,
+        index=current_idx,
+        format_func=lambda pid: get_patient(pid)["display_name"],
+        label_visibility="collapsed",
+        key="patient_id_selector",
+    )
+    selected_entry = get_patient(selected_id)
+    st.caption(selected_entry["subtitle"])
+
+    if selected_id != st.session_state.patient_id:
+        st.session_state.patient_id = selected_id
+        reset_conversation()
+        st.rerun()
+
+    st.markdown("---")
+    if st.button("Reset conversation", type="secondary", use_container_width=True):
+        reset_conversation()
+        st.rerun()
+
+# ---- Main pane ----
+
+current_entry = get_patient(st.session_state.patient_id)
+patient_name = current_entry["display_name"]
+
+st.title(f"Bleep64 OSCE Prototype - {patient_name}")
 st.caption(
     "Two-agent disclosure-gated patient simulator. "
     "Type or record a question. The right-hand panel shows the disclosure gate's reasoning."
@@ -119,7 +165,9 @@ with left:
     chat_container = st.container(height=500)
     with chat_container:
         if not st.session_state.history:
-            st.write("_(Start by asking an opening question, e.g. 'What brings you in today?')_")
+            st.write(
+                "_(Start by asking an opening question, e.g. 'What brings you in today?')_"
+            )
         for turn in st.session_state.history:
             with st.chat_message("user"):
                 st.write(turn["student"])
@@ -140,7 +188,7 @@ with left:
 
     if input_mode == "Text":
         with st.form("text_input_form", clear_on_submit=True):
-            text = st.text_input("Your question to Michael Doyle:")
+            text = st.text_input(f"Your question to {patient_name}:")
             submit = st.form_submit_button("Send")
             if submit and text.strip():
                 submitted_text = text.strip()
@@ -162,7 +210,7 @@ with left:
                     st.info(f"Heard: {submitted_text}")
 
     if submitted_text:
-        turn_engine = build_turn()
+        turn_engine = build_turn(st.session_state.patient_id)
         with st.spinner("Patient thinking..."):
             try:
                 result = turn_engine.process(
@@ -219,10 +267,3 @@ with right:
             st.write(f"- `{fid}`")
     else:
         st.write("_(none)_")
-
-    st.markdown("---")
-    if st.button("Reset conversation", type="secondary"):
-        st.session_state.history = []
-        st.session_state.earned = []
-        st.session_state.last_meta = None
-        st.rerun()
