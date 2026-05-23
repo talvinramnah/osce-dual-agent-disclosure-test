@@ -16,7 +16,17 @@
 - question: "Tell me more about the pain."
   already_earned: ["pc_opening", "pc_duration_brief"]
   newly_earned: ["pain_site", "pain_onset_timing", "pain_onset_mode"]
-  rationale: "Broad expansion within pain-history domain. Releases the surface trio (site, onset timing, onset mode) but NOT the protected facts (character, radiation, constancy)."
+  rationale: "Pain-history broad open #1. Releases the generous surface trio (site, onset timing, onset mode) but NOT pain_temporal, protected facts, or severity."
+
+- question: "Is there anything else going on?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: ["pain_temporal"]
+  rationale: "Ambiguous broad open while pain broad #2 is still available - must take pain tier 2 before associated symptoms. Releases pain_temporal only (smaller second pain broad). Does NOT jump to vomiting/nausea yet."
+
+- question: "Tell me more about it."
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: ["pain_temporal"]
+  rationale: "Second pain-history broad open - pain tier 1 already earned, so ambiguous 'tell me more' unlocks pain_temporal only, not associated symptoms."
 
 - question: "What does the pain feel like? Is it sharp or dull?"
   already_earned: ["pc_opening", "pain_site"]
@@ -37,11 +47,6 @@
   already_earned: ["pc_opening", "pain_site"]
   newly_earned: []
   rationale: "Filler acknowledgement only - nothing earned."
-
-- question: "Any other symptoms I should know about?"
-  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_severity"]
-  newly_earned: ["assoc_vomiting", "assoc_nausea"]
-  rationale: "Broad associated-symptoms prompt - releases the associated surface pair (vomiting and nausea) together. Other associated symptoms (dysuria, fever, bowels, etc.) still require specific questioning."
 
 - question: "Have you noticed anything else going on?"
   already_earned: ["pc_opening", "pain_site", "assoc_vomiting"]
@@ -74,9 +79,14 @@
   rationale: "Question about regular medications - unlocks the name (sodium valproate). Dose requires a specific further question."
 
 - question: "Anything else?"
-  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_temporal"]
   newly_earned: ["assoc_vomiting", "assoc_nausea"]
-  rationale: "Ambiguous broad open - pain-history surface trio already earned, so the next available scope-set is the associated-symptoms surface pair. Releases both vomiting and nausea. Does not unlock protected pain facts (character, radiation, constancy) - those still require specific questioning."
+  rationale: "Ambiguous broad open - both pain broad tiers fully earned, so the next scope-set is associated symptoms. Releases vomiting and nausea. Protected pain facts still need specific questions."
+
+- question: "Any other symptoms I should know about?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_temporal"]
+  newly_earned: ["assoc_vomiting", "assoc_nausea"]
+  rationale: "Clear associated-symptoms steer after both pain broad opens exhausted - releases the associated surface pair."
 
 - question: "Sorry I missed that, could you say it again?"
   already_earned: ["pc_opening", "pain_site"]
@@ -109,11 +119,16 @@
   rationale: "Late-turn broad expansion (TOTAL TURNS SO FAR is 11, beyond the 10-turn threshold) framed around concerns - releases ice_concerns_main only. ice_ideas, ice_concerns_why_surgery, and ice_expectations remain direct-question-only at any turn count."
 
 - question: "Anything else you'd like to mention?"
-  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_severity", "assoc_vomiting", "assoc_nausea", "ice_concerns_main", "pmh_conditions", "drugs_regular", "allergies"]
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode", "pain_temporal", "pain_severity", "assoc_vomiting", "assoc_nausea", "ice_concerns_main", "pmh_conditions", "drugs_regular", "allergies"]
   newly_earned: []
-  rationale: "Broad expansion at scope exhaustion - all available scope-sets (PC duration, pain surface, associated surface, late-turn ICE concerns) are already earned. Returns nothing. Patient should deflect and prompt the student to ask something specific."
+  rationale: "Broad expansion at scope exhaustion - PC duration, both pain broad tiers, associated surface, and late-turn ICE are all earned. Returns nothing. Protected pain facts and anything not yet asked specifically still need targeted questions."
 
 - question: "Tell me more."
   already_earned: ["pc_opening", "pc_duration_brief"]
   newly_earned: ["pain_site", "pain_onset_timing", "pain_onset_mode"]
-  rationale: "Ambiguous broad open with no clear scope steer - PC duration already earned, so next not-yet-earned scope-set is the pain-history surface trio. Releases all three pain surface facts together."
+  rationale: "Ambiguous broad open - PC duration already earned, next scope is pain broad #1. Releases site, onset timing, and onset mode together."
+
+- question: "Anything else about the pain?"
+  already_earned: ["pc_opening", "pc_duration_brief", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: ["pain_temporal"]
+  rationale: "Second pain-history broad open - pain tier 1 done, tier 2 still available. Releases pain_temporal only. Protected facts (character, radiation, constancy) still need specific questions."

@@ -15,7 +15,7 @@ Your job is to look at the student's latest question and decide:
 
 **Protected facts never unlock on broad prompts.** Facts marked `[PROTECTED]` only unlock when the student asks a specific, targeted question about that exact aspect. "Tell me more about the pain" or "anything else" do not unlock protected facts - they unlock only the surface-level non-protected facts in the relevant domain.
 
-**Broad open prompts unlock surface facts in one domain.** For example, "tell me about the pain" within the pain-history domain unlocks site, onset-timing, and onset-mode - not radiation, character, or constancy (those are protected).
+**Broad open prompts unlock surface facts in one domain, at most one scope-set per turn.** Pain history requires **two** separate broad opens before the pain domain is exhausted on vague questions: a generous first release, then a smaller second release. Protected pain facts (character, radiation, constancy) never unlock on broad prompts.
 
 **Aspect-specific questions unlock that aspect only.** "Where is the pain?" unlocks `pain_site` and nothing else. "Does it spread anywhere?" unlocks `pain_radiation` (a protected fact, because the question is specifically on-target).
 
@@ -31,15 +31,18 @@ Your job is to look at the student's latest question and decide:
 
 **Don't over-unlock.** When borderline, release fewer facts rather than more. The whole point is to make the student earn each piece. If a question is vague, lean toward releasing nothing and let the student ask more specifically.
 
-**Broad-open progression across scopes.** A broad open prompt unlocks at most ONE scope-set per use, walking through the scopes below in availability order. Match the question to the scope that fits its content; for ambiguous broad opens with no clear steer ("anything else?", "tell me more"), pick the next not-yet-earned scope-set in the order listed.
+**Broad-open progression across scopes.** A broad open prompt unlocks at most ONE scope-set per use, walking through the scopes below in availability order. Match the question to the scope that fits its content.
+
+**Pain before assoc on ambiguous broads.** If any pain-history broad scope-set below is not yet fully earned, an ambiguous broad open ("tell me more", "anything else?", "is there anything else going on?") MUST take the next pain scope-set - NOT associated symptoms - unless the student clearly steers away from the presenting problem to other symptoms ("any other symptoms", "anything else bothering you apart from the pain", "any other symptoms in your body").
 
 The available scope-sets:
 
 1. **PC duration brief.** If `pc_opening` is already earned but `pc_duration_brief` is not, a broad expansion that follows the PC opening ("tell me more", "can you describe it", "tell me a bit more about that") unlocks `pc_duration_brief` only.
-2. **Pain-history surface trio.** If the pain-history surface set (`pain_site`, `pain_onset_timing`, `pain_onset_mode`) is not yet earned, a broad expansion that pivots to or asks about THE PAIN ("tell me about the pain", "describe the pain", "tell me more about the pain") unlocks all three together.
-3. **Associated-symptoms surface pair.** If `assoc_vomiting` and `assoc_nausea` are not BOTH yet earned, a broad expansion about OTHER SYMPTOMS ("any other symptoms", "anything else been going on", "anything else bothering you") unlocks both `assoc_vomiting` and `assoc_nausea` together. (No other associated symptoms unlock on broad - the student must ask specifically about dysuria, fever, bowels, etc.)
-4. **ICE concerns (late-turn only).** If `TOTAL TURNS SO FAR` is at least 10, AND `ice_concerns_main` is not yet earned, a broad expansion about anything else / what's on the patient's mind / worries ("anything else?", "anything worrying you?", "anything else you'd like to share?") may unlock `ice_concerns_main` only. The other ICE facts (`ice_ideas`, `ice_concerns_why_surgery`, `ice_expectations`) NEVER unlock on broad opens at any turn count - they always require a direct, on-target question.
-5. **Exhaustion.** If the relevant scope-set is already earned (or unavailable due to turn count for ICE), a further broad open unlocks NOTHING. Return `newly_earned: []` with `utterance_type: broad_open`. The patient will deflect naturally and the student must ask something specific.
+2. **Pain-history broad open #1 (generous).** If `pain_site`, `pain_onset_timing`, and `pain_onset_mode` are not ALL yet earned, a broad expansion about THE PAIN ("tell me about the pain", "describe the pain", "tell me more about the pain", or an ambiguous "tell me more" once PC duration is already earned) unlocks all three together. Does NOT unlock protected facts (character, radiation, constancy) or `pain_temporal`.
+3. **Pain-history broad open #2 (smaller).** If broad open #1 is fully earned but `pain_temporal` is not yet earned, a second broad expansion about the pain OR an ambiguous broad that has not yet exhausted pain ("anything else about the pain?", "tell me more about it", "is there anything else going on?" when pain tier 2 is still available) unlocks `pain_temporal` only. Does NOT unlock protected facts or severity (`pain_severity` needs a specific severity question).
+4. **Associated-symptoms surface pair.** Only after BOTH pain broad scope-sets are fully earned: if `assoc_vomiting` and `assoc_nausea` are not BOTH yet earned, a broad expansion clearly about OTHER SYMPTOMS unlocks both together. (No other associated symptoms unlock on broad - the student must ask specifically about dysuria, fever, bowels, etc.)
+5. **ICE concerns (late-turn only).** If `TOTAL TURNS SO FAR` is at least 10, AND `ice_concerns_main` is not yet earned, a broad expansion about worries/concerns may unlock `ice_concerns_main` only - but only after pain broad tiers AND the associated surface pair are exhausted. The other ICE facts NEVER unlock on broad opens.
+6. **Exhaustion.** If all applicable scope-sets above are earned (or unavailable), a further broad open unlocks NOTHING. Return `newly_earned: []` with `utterance_type: broad_open`. Remaining pain detail (character, radiation, constancy, severity, exacerbating, etc.) requires specific questions.
 
 **Specific questions still always work.** Specific direct or aspect-specific questions unlock their target fact regardless of how many broad opens have already fired.
 

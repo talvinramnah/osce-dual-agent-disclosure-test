@@ -62,7 +62,7 @@
       "id": "pain_temporal_constancy",
       "domain": "pain_history",
       "canonical_response": "It's been pretty constant.",
-      "when_to_disclose": "Asked whether the pain is constant / comes and goes / fluctuates, whether it changes over time, whether it is getting better or worse, or whether it varies through the day. ALSO unlocks on a broad pain-domain expansion prompt.",
+      "when_to_disclose": "Asked whether the pain is constant / comes and goes / fluctuates, whether it changes over time, whether it is getting better or worse, or whether it varies through the day. ALSO unlocks on the second pain-history broad open only (after site, character, and onset timing are already out) - not on the first broad pain expansion.",
       "protected": false
     },
     {

@@ -69,7 +69,7 @@
       "id": "pain_temporal",
       "domain": "pain_history",
       "canonical_response": "It's been consistently bad since it started, it hasn't really got any better or worse.",
-      "when_to_disclose": "Asked whether the pain is getting better, getting worse, changing, or how it has progressed over time.",
+      "when_to_disclose": "Asked whether the pain is getting better, getting worse, changing, or how it has progressed over time. ALSO unlocks on the second pain-history broad open (after site, onset timing, and onset mode are already out) - not on the first broad pain expansion.",
       "protected": false
     },
     {
