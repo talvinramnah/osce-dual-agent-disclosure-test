@@ -117,3 +117,23 @@
   already_earned: ["pc_opening", "pc_duration_brief"]
   newly_earned: ["pain_site", "pain_onset_timing", "pain_onset_mode"]
   rationale: "Ambiguous broad open with no clear scope steer - PC duration already earned, so next not-yet-earned scope-set is the pain-history surface trio. Releases all three pain surface facts together."
+
+- question: "Okay, so the pain is on your right side and it came on suddenly out of nowhere - is that right?"
+  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: []
+  rationale: "Confirmation/readback request - student restates prior content (right side, sudden onset) and asks for confirmation. Leading 'Okay, so' is a discourse marker, not filler. utterance_type confirmation_request; no facts unlock."
+
+- question: "Just to check - twenty-four hours, yeah?"
+  already_earned: ["pc_opening", "pc_duration_brief"]
+  newly_earned: []
+  rationale: "Short confirmation/readback - student is verifying a previously-disclosed timing detail using a tag question. utterance_type confirmation_request; no facts unlock."
+
+- question: "I'm going to ask you a few more questions about your symptoms. Will that be ok?"
+  already_earned: ["pc_opening", "pain_site", "pain_onset_timing", "pain_onset_mode"]
+  newly_earned: []
+  rationale: "Procedural signposting plus consent-to-proceed - student is announcing the next section and asking permission. utterance_type procedural; no facts unlock."
+
+- question: "Ok, so I'd like to ask about your background next. Would that be alright?"
+  already_earned: ["pc_opening", "pain_site", "pain_character", "pain_radiation"]
+  newly_earned: []
+  rationale: "Procedural signposting with leading 'Ok, so' discourse marker. Body is a permission-to-proceed question, not clinical. utterance_type procedural; no facts unlock."

@@ -27,6 +27,12 @@ Your job is to look at the student's latest question and decide:
 
 **Social chat + clinical question = treat as the clinical question.** "I'm sorry that sounds awful, where exactly is the pain?" → process the location question; the social opener is just rapport.
 
+**Confirmation / readback requests unlock nothing.** When the student restates prior content and invites the patient to confirm it (e.g. "Okay, so the pain is on the right side, is that right?", "Just to check - twenty-four hours, yeah?", "Did you say sudden onset?", "So, around the back as well?"), the question contains no new clinical aspect to unlock. Return `newly_earned: []` and `utterance_type: "confirmation_request"`. The patient will give a brief affirmative anchored on the conversation history (and may gently correct any errors using already-disclosed content only).
+
+**Procedural / consent-to-proceed unlocks nothing.** When the student signposts the next section of the consultation and asks permission to proceed (e.g. "I'm going to ask you a few more questions about your symptoms - is that okay?", "Would you mind if I asked about your medications?", "Can I take you through some questions about your background?", "Will that be ok?"), the question is procedural, not clinical. Return `newly_earned: []` and `utterance_type: "procedural"`. The patient will give a brief affirmative consent.
+
+**Leading discourse markers do not make an utterance filler.** Confirmation requests and procedural questions very often begin with "Okay,", "Ok,", "All right,", "So," or "Right,". These leading filler words are framing only - they do NOT push the utterance into `filler_only`. Classify by what the body of the utterance is actually doing. "Okay, so the pain is on your right side, is that right?" is `confirmation_request`, not `filler_only`. "Ok, I'd like to ask about your background next, is that alright?" is `procedural`, not `filler_only`.
+
 **Already-earned facts don't appear in `newly_earned`.** If a fact id appears in the `already earned fact ids` list provided in the user prompt, do NOT include it again in `newly_earned`, even if the current question would have earned it. Earned facts are sticky - the patient can reference them in later turns automatically.
 
 **Don't over-unlock.** When borderline, release fewer facts rather than more. The whole point is to make the student earn each piece. If a question is vague, lean toward releasing nothing and let the student ask more specifically.
@@ -48,16 +54,24 @@ The available scope-sets:
 ## Utterance type taxonomy
 
 Choose one:
-- `filler_only` - acknowledgements with no question (okay, right, mm-hm, I see, go on)
+- `filler_only` - acknowledgements with no question (okay, right, mm-hm, I see, go on) - standalone only, no question attached
 - `social_chat` - interpersonal check-in about the patient as a person (how are you doing, how are you feeling, how are you holding up, are you okay) - NOT a clinical question about the case
+- `confirmation_request` - student restates prior content and asks for confirmation ("is that right?", "did I get that right?", "twenty-four hours, yeah?", "Just to summarise… is that all correct?")
+- `procedural` - student signposts the next section of the consultation and asks permission to proceed ("I'm going to ask about X next - is that okay?", "Would you mind if I asked about your medications?", "Will that be ok?")
 - `broad_open` - open invitations like "tell me more", "describe it", "anything else"
 - `aspect_specific` - asks about a specific aspect (where is it, when did it start)
 - `specific_direct` - very targeted question that maps to a single fact (does it radiate to the groin)
-- `yes_no` - closed yes/no question (do you smoke, any allergies)
-- `unclear` - mishearing, unclear speech, ambiguous reference
+- `yes_no` - closed yes/no question about a clinical aspect (do you smoke, any allergies) - typically unlocks a fact
+- `unclear` - mishearing, unclear speech, ambiguous reference, or off-script utterance the patient can't reasonably answer
 - `closing` - student is wrapping up (thank you, that's all I need, summary)
 
 **Disambiguation tip for `social_chat` vs `aspect_specific`:** "How are you feeling?" with no clinical specifier is `social_chat`. "How is the pain right now?" or "How bad is the pain on a scale of 10?" is `aspect_specific` because it targets a clinical aspect. If in doubt and the question contains a clinical word (pain, symptom, sick, nausea, etc.), prefer the clinical category.
+
+**Disambiguation tip for `confirmation_request` vs `filler_only`:** A confirmation/readback usually has the shape "[restated prior content], is that right?" or ends in a tag like "…yeah?", "…right?", "…did you say?". The body of the utterance contains a real question, even if it opens with "Okay, so…" or "Right, so…". Filler is a standalone acknowledgement with no question at all ("Okay.", "Right.", "Mm-hm."). If the utterance ends in a question mark or a confirmation tag, it is NOT `filler_only`.
+
+**Disambiguation tip for `procedural` vs `filler_only` and vs `yes_no`:** Procedural is a *non-clinical* permission-to-proceed question - it announces what the student is about to do and asks "is that okay?". It does not target a clinical fact. `yes_no` in this taxonomy is reserved for *clinical* yes/no questions that typically unlock a fact (do you smoke, any allergies). "Will that be ok?" / "Is that alright?" / "Would you mind?" attached to a signposting statement is `procedural`. Standalone filler is not procedural - it has no question body.
+
+**Disambiguation tip for `confirmation_request` vs `closing`:** A closing summary at the end of the consultation ("So you've been having pain for 24 hours… is that everything I should know?") is `closing` because it's wrapping up. A mid-consultation readback that confirms one or two facts and continues the history-taking is `confirmation_request`. If the student then asks a fresh question on the next turn, the prior turn was `confirmation_request`, not `closing`.
 
 ## Output format
 
