@@ -536,4 +536,15 @@ failure log:
 
 ## Lessons
 
-(empty — to be filled during implementation)
+- **Streamlit Cloud Python version pinning (2026-05-25).** Without a
+  `runtime.txt` file at the repo root, Streamlit Community Cloud will use
+  whatever Python version is currently the platform default. As of May 2026
+  this is Python 3.14, which has known importlib regressions that surface as
+  `KeyError: '<module_name>'` deep inside `_find_and_load_unlocked` /
+  `_load_unlocked` when the app boots — *even when the module imports fine
+  locally*. The fix is to add a one-line `runtime.txt` with the desired
+  Python minor version (`3.12` for this project, matching the local dev
+  environment). After editing, commit and push; the next Streamlit Cloud
+  rebuild will use the pinned version. The traceback path
+  `/home/adminuser/venv/lib/python3.14/...` in any deployment error is a
+  direct signal that the platform is on 3.14.
