@@ -509,6 +509,30 @@ failure log:
      turns) — those should still produce real affirmative responses (they're
      not in `SILENT_UTTERANCE_TYPES`).
 
+- **2026-05-25**: Defensive follow-up to Task 2 — user reported still seeing
+  "Mm." in response to a single-word "right" student input. Root cause
+  hypothesis: the gate classified the bare "right" as `unclear` (not
+  `filler_only`), so the orchestrator short-circuit did not fire, the
+  patient agent was invoked, and its "Otherwise" branch had no explicit "do
+  NOT use Mm" guardrail (unlike the new `confirmation_request` and
+  `procedural` branches added in Task 1). Closed the gap defensively:
+  - `patients/michael_doyle/patient_system.md`:
+    - Added "Do NOT use 'Mm' or other non-words" guardrail to ALL remaining
+      no-fact branches (`social_chat`, `broad_open`, "Otherwise"). The new
+      branches from Task 1 already had it.
+    - Broadened the "Otherwise" branch description to explicitly cover
+      `unclear` / `yes_no` / `aspect_specific` / `specific_direct` with no
+      matching fact (these all currently route through this branch but it
+      was framed in a clinical-only way).
+    - Added a new top-level guardrail in the Guardrails section:
+      *"Never reply with 'Mm', 'Mm.', 'Mhm', 'Hmm', 'Uh', or any other
+      non-word sound as your whole response, under ANY circumstances."*
+      with a brief explanation that pure-filler turns are handled upstream
+      and the patient agent only receives turns that need a real response.
+  - Awaiting user confirmation of the `utterance_type` from the failing
+    turn so we know whether the deeper issue is also a misclassification
+    that needs few-shot work, or just the missing guardrail.
+
 - **2026-05-25**: Task 3 implemented:
   - `patients/michael_doyle/disclosure_few_shots.yaml`: added one few-shot
     for the canonical off-script case (*"Can you go away?"*) classified as
