@@ -56,9 +56,12 @@ class IntentAgent:
         return "\n\n".join(rendered)
 
     def _build_history_block(self, history: list[dict]) -> str:
-        if not history:
+        # Silent turns (filler_only short-circuit) have an empty patient
+        # response; skip them so the classifier sees a clean conversation.
+        spoken = [turn for turn in history if turn.get("patient")]
+        if not spoken:
             return "(no prior turns yet)"
-        recent = history[-5:]
+        recent = spoken[-5:]
         return "\n".join(
             f"Student: {turn['student']}\nPatient: {turn['patient']}" for turn in recent
         )

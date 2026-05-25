@@ -45,6 +45,16 @@ def _utcnow_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def _first_name(display_name: str) -> str:
+    """First token of a display name, e.g. 'Michael' from 'Michael Doyle'."""
+    return display_name.split()[0] if display_name else "Patient"
+
+
+def _silent_ack_text(display_name: str) -> str:
+    """Italic placeholder shown when the patient stayed silent on a filler turn."""
+    return f"_({_first_name(display_name)} acknowledges silently)_"
+
+
 def format_session_as_markdown(
     *,
     patient_display_name: str,
@@ -65,11 +75,15 @@ def format_session_as_markdown(
 
     if turns:
         for turn in turns:
+            patient_line = (turn.get("patient") or "").strip()
+            if not patient_line:
+                # Silent acknowledgement turn (filler_only); omit from transcript.
+                continue
             lines.append("---")
             lines.append("")
             lines.append(f"**Student:** {turn.get('student', '').strip()}")
             lines.append("")
-            lines.append(f"**Patient:** {turn.get('patient', '').strip()}")
+            lines.append(f"**Patient:** {patient_line}")
             lines.append("")
 
     lines.append("---")
@@ -387,8 +401,11 @@ if viewing_session is not None:
             for turn in viewing_session["turns"]:
                 with st.chat_message("user"):
                     st.write(turn["student"])
-                with st.chat_message("assistant"):
-                    st.write(turn["patient"])
+                if turn.get("patient"):
+                    with st.chat_message("assistant"):
+                        st.write(turn["patient"])
+                else:
+                    st.markdown(_silent_ack_text(viewing_session["patient_display_name"]))
 
     with right:
         st.subheader("Disclosure debug")
@@ -426,10 +443,13 @@ with left:
         for turn in st.session_state.history:
             with st.chat_message("user"):
                 st.write(turn["student"])
-            with st.chat_message("assistant"):
-                st.write(turn["patient"])
-                if turn.get("audio"):
-                    st.audio(turn["audio"], format="audio/mp3", autoplay=False)
+            if turn.get("patient"):
+                with st.chat_message("assistant"):
+                    st.write(turn["patient"])
+                    if turn.get("audio"):
+                        st.audio(turn["audio"], format="audio/mp3", autoplay=False)
+            else:
+                st.markdown(_silent_ack_text(patient_name))
 
     st.markdown("---")
     input_mode = st.radio(
@@ -480,11 +500,12 @@ with left:
                 st.stop()
 
         audio_bytes: bytes | None = None
-        with st.spinner("Generating voice..."):
-            try:
-                audio_bytes = build_tts().synthesize(result["patient_response"])
-            except Exception as e:
-                st.warning(f"TTS failed (continuing without audio): {e}")
+        if result["patient_response"]:
+            with st.spinner("Generating voice..."):
+                try:
+                    audio_bytes = build_tts().synthesize(result["patient_response"])
+                except Exception as e:
+                    st.warning(f"TTS failed (continuing without audio): {e}")
 
         st.session_state.history.append({
             "student": submitted_text,

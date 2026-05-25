@@ -46,8 +46,12 @@ class PatientAgent:
         else:
             prior_block = "(none)"
 
+        # Silent turns (filler_only short-circuit) have an empty patient
+        # response; skip them so the model sees a clean back-and-forth and
+        # doesn't get confused by blank assistant messages.
+        spoken_history = [turn for turn in history if turn.get("patient")]
         history_messages: list[dict] = []
-        for turn in history[-10:]:
+        for turn in spoken_history[-10:]:
             history_messages.append({"role": "user", "content": turn["student"]})
             history_messages.append({"role": "assistant", "content": turn["patient"]})
 

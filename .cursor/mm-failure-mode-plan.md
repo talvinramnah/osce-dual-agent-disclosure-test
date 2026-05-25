@@ -373,9 +373,9 @@ failure log:
 - [x] Fix direction approved — Option 2+ (eliminate "Mm" entirely via routing +
       structural suppression of filler_only turns)
 - [x] Task 1 — Add `confirmation_request` and `procedural` utterance types (Part A)
-      — **awaiting human verification**
-- [ ] Task 2 — Suppress patient turn for `filler_only` (Part B)
-- [ ] Task 3 — Off-script `unclear` few-shot (Part C)
+- [x] Task 2 — Suppress patient turn for `filler_only` (Part B)
+- [x] Task 3 — Off-script `unclear` few-shot (Part C) — **awaiting human
+      verification**
 - [ ] Task 4 — End-to-end verification against the failure log
 
 ## Current Status / Progress Tracking
@@ -446,6 +446,93 @@ failure log:
   Note: the patient agent's `temperature=0.7` plus model variability means the
   exact wording may differ between runs — what matters is that the response is
   a brief affirmative, not "Mm", and contains no new clinical content.
+
+- **2026-05-25**: Task 2 implemented:
+  - `orchestrator.py`: introduced a `SILENT_UTTERANCE_TYPES = {"filler_only"}`
+    constant and a guard around the patient-agent call. When the gate returns
+    `utterance_type: filler_only`, the orchestrator now returns
+    `patient_response = ""` without invoking the patient agent. Module
+    docstring updated to describe the short-circuit.
+  - `intent_agent.py` (`_build_history_block`): filters out turns where
+    `patient` is empty before slicing the most recent 5 — silent turns no
+    longer appear in the classifier's context. Returns "(no prior turns yet)"
+    if all prior turns were silent.
+  - `patient_agent.py` (`respond`): same filter applied to the history before
+    slicing the most recent 10 — the patient agent never sees a blank
+    assistant message that would otherwise confuse it.
+  - `patients/michael_doyle/patient_system.md`:
+    - Removed the `filler_only` sub-bullet from the no-fact branch (the patient
+      agent will never see `utterance_type: filler_only` after Task 2; the
+      bullet is dead code in the prompt).
+    - Added a note in "Input format you'll receive" explaining that filler is
+      handled upstream and the agent should never reply with "Mm" or another
+      non-word.
+  - `app.py`:
+    - Added helpers `_first_name(display_name)` and
+      `_silent_ack_text(display_name)` that produce the italic placeholder
+      "_(Michael acknowledges silently)_" using the patient's first name.
+    - `format_session_as_markdown`: skips turns with empty `patient` so silent
+      turns don't appear in downloaded transcripts.
+    - Live conversation renderer: when `turn["patient"]` is empty, renders the
+      student's bubble followed by the faint italic placeholder instead of an
+      assistant chat bubble.
+    - Archived session renderer: same treatment, using
+      `viewing_session["patient_display_name"]`.
+    - TTS call is wrapped in `if result["patient_response"]:` so no
+      ElevenLabs synthesis is attempted on silent turns.
+  - All four Python files parse with `ast`. No linter errors. No active
+    occurrences of "Mm" remain in the patient agent's instruction set; the
+    only remaining mentions are negative guardrails (do NOT use "Mm") and a
+    disambiguation example for the classifier listing "Mm-hm" as a filler
+    indicator.
+  - **Awaiting manual verification by the human against Task 2 success
+    criteria before proceeding to Task 3.**
+
+  Suggested verification checks in the Streamlit app:
+  1. Run a couple of normal turns first to set up state (e.g. "What brings
+     you in?" → "Tell me more about the pain.").
+  2. Send a plain standalone filler — just *"Okay."* with nothing else.
+     Expect: right-hand debug panel shows `utterance_type: filler_only`,
+     `newly_earned: []`. In the conversation pane, the student's bubble
+     appears followed by faint italic *"(Michael acknowledges silently)"* —
+     no patient bubble, no audio player, no "Mm". No ElevenLabs spinner.
+  3. Send another *"Right."* alone — same silent-acknowledgement behaviour.
+  4. Ask a normal clinical question after the silent turns (e.g. *"What does
+     the pain feel like?"*). Expect: works normally; the silent turns should
+     not have polluted the agents' context.
+  5. Click "Download chat (.md)" — the downloaded transcript should NOT
+     contain the silent turns.
+  6. Click "End & save session", then open it from the past-sessions list.
+     The archived renderer should also show the faint silent-acknowledgement
+     indicator for the filler turns.
+  7. Re-run the Task 1 verification flow (confirmation_request and procedural
+     turns) — those should still produce real affirmative responses (they're
+     not in `SILENT_UTTERANCE_TYPES`).
+
+- **2026-05-25**: Task 3 implemented:
+  - `patients/michael_doyle/disclosure_few_shots.yaml`: added one few-shot
+    for the canonical off-script case (*"Can you go away?"*) classified as
+    `utterance_type: unclear` with `newly_earned: []`. Rationale explicitly
+    distinguishes it from filler/procedural/social_chat so the classifier
+    has a clear signal. The taxonomy entry for `unclear` was already
+    broadened in Task 1 to cover "off-script utterance the patient can't
+    reasonably answer", so no further prompt change is needed.
+  - YAML parses (28 few-shots total).
+  - With `unclear` classification, the existing "Otherwise" branch in
+    `patient_system.md` fires — the patient gives a natural deflection
+    ("I don't really know" / "Sorry, I'm not sure what you mean.") rather
+    than a silent turn.
+  - **Awaiting manual verification by the human against Task 3 success
+    criteria before proceeding to Task 4 (end-to-end replay).**
+
+  Suggested verification check in the Streamlit app:
+  1. Build up a turn or two of state (so `already_earned` is non-empty).
+  2. Send *"Can you go away?"* as a turn. Expect: debug panel shows
+     `utterance_type: unclear`, `newly_earned: []`. Patient bubble appears
+     with something like "Sorry, I'm not sure what you mean." — not a
+     silent turn, not "Mm.".
+  3. Try a near-variant like *"Please leave me alone."* — should also hit
+     `unclear` (the few-shot generalises).
 
 ## Lessons
 

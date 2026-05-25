@@ -7,11 +7,20 @@ Flow per turn:
   2. The orchestrator hydrates those IDs (plus previously earned IDs) to full
      fact objects.
   3. Patient Agent generates the spoken response using ONLY those facts.
+     SHORT-CIRCUIT: if the gate classifies as `filler_only`, the patient
+     agent is NOT called. The patient stays silent (empty response) and the
+     UI renders a faint placeholder. This is more natural than emitting a
+     robotic "Mm" on every pure-acknowledgement turn.
   4. The earned-fact set is updated and returned for the next turn.
 """
 
 from intent_agent import IntentAgent
 from patient_agent import PatientAgent
+
+# Utterance types that should produce no patient speech at all. The orchestrator
+# short-circuits before the patient agent is called; the UI renders a faint
+# silent-acknowledgement indicator in place of a chat bubble.
+SILENT_UTTERANCE_TYPES = {"filler_only"}
 
 
 class OsceTurn:
@@ -57,14 +66,17 @@ class OsceTurn:
             fid for fid in already_earned if fid in self.fact_lookup
         ]
 
-        # Step 3: generate patient response
-        patient_response = self.patient_agent.respond(
-            question=student_question,
-            newly_authorised_facts=newly_authorised_facts,
-            previously_disclosed_ids=previously_disclosed_ids,
-            history=history,
-            utterance_type=utterance_type,
-        )
+        # Step 3: generate patient response (or skip entirely for silent types).
+        if utterance_type in SILENT_UTTERANCE_TYPES:
+            patient_response = ""
+        else:
+            patient_response = self.patient_agent.respond(
+                question=student_question,
+                newly_authorised_facts=newly_authorised_facts,
+                previously_disclosed_ids=previously_disclosed_ids,
+                history=history,
+                utterance_type=utterance_type,
+            )
 
         # Step 4: bookkeeping
         updated_earned = list({*already_earned, *newly_earned_ids})

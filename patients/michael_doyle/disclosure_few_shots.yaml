@@ -137,3 +137,8 @@
   already_earned: ["pc_opening", "pain_site", "pain_character", "pain_radiation"]
   newly_earned: []
   rationale: "Procedural signposting with leading 'Ok, so' discourse marker. Body is a permission-to-proceed question, not clinical. utterance_type procedural; no facts unlock."
+
+- question: "Can you go away?"
+  already_earned: ["pc_opening", "pain_site"]
+  newly_earned: []
+  rationale: "Off-script / non-clinical utterance the patient cannot reasonably answer in character - not filler (it's a real question), not procedural (no signposting of the next clinical section), not social_chat (not a rapport check-in). utterance_type unclear; no facts unlock. Patient will give the existing natural deflection ('Sorry, I'm not sure what you mean.')."
